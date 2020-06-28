@@ -47,7 +47,11 @@ namespace Il2CppDumper
         public override ulong MapVATR(ulong absAddr)
         {
             var addr = absAddr - imageBase;
-            var section = sections.First(x => addr >= x.VirtualAddress && addr <= x.VirtualAddress + x.VirtualSize);
+            var section = sections.FirstOrDefault(x => addr >= x.VirtualAddress && addr <= x.VirtualAddress + x.VirtualSize);
+            if (section == null)
+            {
+                return 0ul;
+            }
             return addr - (section.VirtualAddress - section.PointerToRawData);
         }
 
@@ -81,7 +85,7 @@ namespace Il2CppDumper
             plusSearch.SetSection(SearchSectionType.Bss, imageBase, data);
             var codeRegistration = plusSearch.FindCodeRegistration();
             var metadataRegistration = plusSearch.FindMetadataRegistration();
-            return AutoInit(codeRegistration, metadataRegistration);
+            return AutoPlusInit(codeRegistration, metadataRegistration);
         }
 
         public override bool SymbolSearch()

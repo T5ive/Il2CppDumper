@@ -24,34 +24,44 @@ namespace Il2CppDumper
                 var pos = Position;
                 var cmd = ReadUInt32();
                 var cmdsize = ReadUInt32();
-                if (cmd == 0x19) //LC_SEGMENT_64
+                switch (cmd)
                 {
-                    var segname = Encoding.UTF8.GetString(ReadBytes(16)).TrimEnd('\0');
-                    if (segname == "__TEXT") //__PAGEZERO
-                    {
-                        vmaddr = ReadUInt64();
-                    }
-                    else
-                    {
+                    case 0x19: //LC_SEGMENT_64
+                        var segname = Encoding.UTF8.GetString(ReadBytes(16)).TrimEnd('\0');
+                        if (segname == "__TEXT") //__PAGEZERO
+                        {
+                            vmaddr = ReadUInt64();
+                        }
+                        else
+                        {
+                            Position += 8;
+                        }
+                        Position += 32; //skip vmsize, fileoff, filesize, maxprot, initprot
+                        var nsects = ReadUInt32();
+                        Position += 4; //skip flags
+                        for (var j = 0; j < nsects; j++)
+                        {
+                            var section = new MachoSection64Bit();
+                            sections.Add(section);
+                            section.sectname = Encoding.UTF8.GetString(ReadBytes(16)).TrimEnd('\0');
+                            Position += 16; //skip segname
+                            section.addr = ReadUInt64();
+                            section.size = ReadUInt64();
+                            section.offset = ReadUInt32();
+                            Position += 12; //skip align, reloff, nreloc
+                            section.flags = ReadUInt32();
+                            section.end = section.addr + section.size;
+                            Position += 12; //skip reserved1, reserved2, reserved3
+                        }
+                        break;
+                    case 0x2C: //LC_ENCRYPTION_INFO_64
                         Position += 8;
-                    }
-                    Position += 32; //skip vmsize, fileoff, filesize, maxprot, initprot
-                    var nsects = ReadUInt32();
-                    Position += 4; //skip flags
-                    for (var j = 0; j < nsects; j++)
-                    {
-                        var section = new MachoSection64Bit();
-                        sections.Add(section);
-                        section.sectname = Encoding.UTF8.GetString(ReadBytes(16)).TrimEnd('\0');
-                        Position += 16; //skip segname
-                        section.addr = ReadUInt64();
-                        section.size = ReadUInt64();
-                        section.offset = ReadUInt32();
-                        Position += 12; //skip align, reloff, nreloc
-                        section.flags = ReadUInt32();
-                        section.end = section.addr + section.size;
-                        Position += 12; //skip reserved1, reserved2, reserved3
-                    }
+                        var cryptID = ReadUInt32();
+                        if (cryptID != 0)
+                        {
+                            Console.WriteLine("ERROR: This Mach-O executable is encrypted and cannot be processed.");
+                        }
+                        break;
                 }
                 Position = pos + cmdsize;//skip
             }
@@ -65,6 +75,8 @@ namespace Il2CppDumper
 
         public override bool Search()
         {
+            var codeRegistration = 0ul;
+            var metadataRegistration = 0ul;
             if (Version < 23)
             {
                 var __mod_init_func = sections.First(x => x.sectname == "__mod_init_func");
@@ -73,6 +85,8 @@ namespace Il2CppDumper
                 {
                     if (i > 0)
                     {
+                        var flag = false;
+                        var subaddr = 0ul;
                         Position = MapVATR(i);
                         var buff = ReadBytes(4);
                         if (FeatureBytes1.SequenceEqual(buff))
@@ -81,19 +95,42 @@ namespace Il2CppDumper
                             if (FeatureBytes2.SequenceEqual(buff))
                             {
                                 Position += 8;
-                                var subaddr = DecodeAdr(i + 16, ReadBytes(4));
-                                var rsubaddr = MapVATR(subaddr);
-                                Position = rsubaddr;
-                                var codeRegistration = DecodeAdrp(subaddr, ReadBytes(4));
-                                codeRegistration += DecodeAdd(ReadBytes(4));
-                                Position = rsubaddr + 8;
-                                var metadataRegistration = DecodeAdrp(subaddr + 8, ReadBytes(4));
-                                metadataRegistration += DecodeAdd(ReadBytes(4));
-                                Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
-                                Console.WriteLine("MetadataRegistration : {0:x}", metadataRegistration);
-                                Init(codeRegistration, metadataRegistration);
-                                return true;
+                                var inst = ReadBytes(4);
+                                if (IsAdr(inst))
+                                {
+                                    subaddr = DecodeAdr(i + 16, inst);
+                                    flag = true;
+                                }
                             }
+                        }
+                        else
+                        {
+                            Position += 0xc;
+                            buff = ReadBytes(4);
+                            if (FeatureBytes2.SequenceEqual(buff))
+                            {
+                                buff = ReadBytes(4);
+                                if (FeatureBytes1.SequenceEqual(buff))
+                                {
+                                    Position -= 0x10;
+                                    var inst = ReadBytes(4);
+                                    if (IsAdr(inst))
+                                    {
+                                        subaddr = DecodeAdr(i + 8, inst);
+                                        flag = true;
+                                    }
+                                }
+                            }
+                        }
+                        if (flag)
+                        {
+                            var rsubaddr = MapVATR(subaddr);
+                            Position = rsubaddr;
+                            codeRegistration = DecodeAdrp(subaddr, ReadBytes(4));
+                            codeRegistration += DecodeAdd(ReadBytes(4));
+                            Position = rsubaddr + 8;
+                            metadataRegistration = DecodeAdrp(subaddr + 8, ReadBytes(4));
+                            metadataRegistration += DecodeAdd(ReadBytes(4));
                         }
                     }
                 }
@@ -125,15 +162,11 @@ namespace Il2CppDumper
                                 var subaddr = DecodeAdr(i + 8, ReadBytes(4));
                                 var rsubaddr = MapVATR(subaddr);
                                 Position = rsubaddr;
-                                var codeRegistration = DecodeAdrp(subaddr, ReadBytes(4));
+                                codeRegistration = DecodeAdrp(subaddr, ReadBytes(4));
                                 codeRegistration += DecodeAdd(ReadBytes(4));
                                 Position = rsubaddr + 8;
-                                var metadataRegistration = DecodeAdrp(subaddr + 8, ReadBytes(4));
+                                metadataRegistration = DecodeAdrp(subaddr + 8, ReadBytes(4));
                                 metadataRegistration += DecodeAdd(ReadBytes(4));
-                                Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
-                                Console.WriteLine("MetadataRegistration : {0:x}", metadataRegistration);
-                                Init(codeRegistration, metadataRegistration);
-                                return true;
                             }
                         }
                     }
@@ -166,19 +199,22 @@ namespace Il2CppDumper
                                 var subaddr = DecodeAdr(i + 8, ReadBytes(4));
                                 var rsubaddr = MapVATR(subaddr);
                                 Position = rsubaddr;
-                                var codeRegistration = DecodeAdrp(subaddr, ReadBytes(4));
+                                codeRegistration = DecodeAdrp(subaddr, ReadBytes(4));
                                 codeRegistration += DecodeAdd(ReadBytes(4));
                                 Position = rsubaddr + 8;
-                                var metadataRegistration = DecodeAdrp(subaddr + 8, ReadBytes(4));
+                                metadataRegistration = DecodeAdrp(subaddr + 8, ReadBytes(4));
                                 metadataRegistration += DecodeAdd(ReadBytes(4));
-                                Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
-                                Console.WriteLine("MetadataRegistration : {0:x}", metadataRegistration);
-                                Init(codeRegistration, metadataRegistration);
-                                return true;
                             }
                         }
                     }
                 }
+            }
+            if (codeRegistration != 0 && metadataRegistration != 0)
+            {
+                Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
+                Console.WriteLine("MetadataRegistration : {0:x}", metadataRegistration);
+                Init(codeRegistration, metadataRegistration);
+                return true;
             }
             return false;
         }
@@ -195,7 +231,7 @@ namespace Il2CppDumper
             plusSearch.SetSection(SearchSectionType.Bss, bss);
             var codeRegistration = plusSearch.FindCodeRegistration();
             var metadataRegistration = plusSearch.FindMetadataRegistration();
-            return AutoInit(codeRegistration, metadataRegistration);
+            return AutoPlusInit(codeRegistration, metadataRegistration);
         }
 
         public override bool SymbolSearch()

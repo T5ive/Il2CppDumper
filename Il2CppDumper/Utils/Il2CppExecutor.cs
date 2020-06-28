@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Il2CppDumper
 {
@@ -178,23 +179,56 @@ namespace Il2CppDumper
             return $"<{string.Join(", ", genericParameterNames)}>";
         }
 
-        public string GetMethodSpecMethodName(Il2CppMethodSpec methodSpec)
+        public (string, string) GetMethodSpecName(Il2CppMethodSpec methodSpec, bool addNamespace = false)
         {
             var methodDef = metadata.methodDefs[methodSpec.methodDefinitionIndex];
             var typeDef = metadata.typeDefs[methodDef.declaringType];
-            var typeName = GetTypeDefName(typeDef, false, false);
+            var typeName = GetTypeDefName(typeDef, addNamespace, false);
             if (methodSpec.classIndexIndex != -1)
             {
                 var classInst = il2Cpp.genericInsts[methodSpec.classIndexIndex];
                 typeName += GetGenericInstParams(classInst);
             }
-            var methodName = typeName + "." + metadata.GetStringFromIndex(methodDef.nameIndex);
+            var methodName = metadata.GetStringFromIndex(methodDef.nameIndex);
             if (methodSpec.methodIndexIndex != -1)
             {
                 var methodInst = il2Cpp.genericInsts[methodSpec.methodIndexIndex];
                 methodName += GetGenericInstParams(methodInst);
             }
-            return methodName;
+            return (typeName, methodName);
+        }
+
+        public Il2CppGenericContext GetMethodSpecGenericContext(Il2CppMethodSpec methodSpec)
+        {
+            var classInstPointer = 0ul;
+            var methodInstPointer = 0ul;
+            if (methodSpec.classIndexIndex != -1)
+            {
+                classInstPointer = il2Cpp.genericInstPointers[methodSpec.classIndexIndex];
+            }
+            if (methodSpec.methodIndexIndex != -1)
+            {
+                methodInstPointer = il2Cpp.genericInstPointers[methodSpec.methodIndexIndex];
+            }
+            return new Il2CppGenericContext { class_inst = classInstPointer, method_inst = methodInstPointer };
+        }
+
+        public Il2CppRGCTXDefinition[] GetTypeRGCTXDefinition(Il2CppTypeDefinition typeDef, int imageIndex)
+        {
+            Il2CppRGCTXDefinition[] collection = null;
+            if (il2Cpp.Version >= 24.2f)
+            {
+                il2Cpp.rgctxsDictionary[imageIndex].TryGetValue(typeDef.token, out collection);
+            }
+            else
+            {
+                if (typeDef.rgctxCount > 0)
+                {
+                    collection = new Il2CppRGCTXDefinition[typeDef.rgctxCount];
+                    Array.Copy(metadata.rgctxEntries, typeDef.rgctxStartIndex, collection, 0, typeDef.rgctxCount);
+                }
+            }
+            return collection;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using static Il2CppDumper.Il2CppConstants;
 
@@ -20,9 +21,10 @@ namespace Il2CppDumper
             il2Cpp = il2CppExecutor.il2Cpp;
         }
 
-        public void Decompile(Config config)
+        public void Decompile(Config config, string outputDir)
         {
-            var writer = new StreamWriter(new FileStream(Program.NameDump+"dump.cs", FileMode.Create), new UTF8Encoding(false));
+            //var writer = new StreamWriter(new FileStream(Program.NameDump+"dump.cs", FileMode.Create), new UTF8Encoding(false));
+            var writer = new StreamWriter(new FileStream(outputDir + "dump.cs", FileMode.Create), new UTF8Encoding(false));
             //dump image
             for (var imageIndex = 0; imageIndex < metadata.imageDefs.Length; imageIndex++)
             {
@@ -210,7 +212,7 @@ namespace Il2CppDumper
                                     var propertyType = il2Cpp.types[methodDef.returnType];
                                     writer.Write($"{executor.GetTypeName(propertyType, false, false)} {metadata.GetStringFromIndex(propertyDef.nameIndex)} {{ ");
                                 }
-                                else if (propertyDef.set > 0)
+                                else if (propertyDef.set >= 0)
                                 {
                                     var methodDef = metadata.methodDefs[typeDef.methodStart + propertyDef.set];
                                     writer.Write(GetModifiers(methodDef));
@@ -335,12 +337,14 @@ namespace Il2CppDumper
                                 writer.Write(string.Join(", ", parameterStrs));
                                 writer.Write(") { }\n");
 
-                                if (il2Cpp.genericMethoddDictionary.TryGetValue(i, out var genericMethods))
+                                if (il2Cpp.methodDefinitionMethodSpecs.TryGetValue(i, out var methodSpecs))
                                 {
                                     writer.Write("\t/* GenericInstMethod :\n");
-                                    foreach ((var methodSpec, var genericMethodPointer) in genericMethods)
+                                    var groups = methodSpecs.GroupBy(x => il2Cpp.methodSpecGenericMethodPointers[x]);
+                                    foreach (var group in groups)
                                     {
                                         writer.Write("\t|\n");
+                                        var genericMethodPointer = group.Key;
                                         if (genericMethodPointer > 0)
                                         {
                                             var fixedPointer = il2Cpp.GetRVA(genericMethodPointer);
@@ -350,7 +354,11 @@ namespace Il2CppDumper
                                         {
                                             writer.Write("\t|-RVA: -1 Offset: -1\n");
                                         }
-                                        writer.Write($"\t|-{executor.GetMethodSpecMethodName(methodSpec)}\n");
+                                        foreach (var methodSpec in group)
+                                        {
+                                            (var methodSpecTypeName, var methodSpecMethodName) = executor.GetMethodSpecName(methodSpec);
+                                            writer.Write($"\t|-{methodSpecTypeName}.{methodSpecMethodName}\n");
+                                        }
                                     }
                                     writer.Write("\t*/\n");
                                 }
