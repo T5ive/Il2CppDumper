@@ -173,7 +173,7 @@ namespace Il2CppDumper
                     value = x.Value,
                     address = $"0x{x.Address:X}"
                 }).ToArray();
-                File.WriteAllText("stringliteral.json", JsonConvert.SerializeObject(stringLiterals, Formatting.Indented), new UTF8Encoding(false));
+                File.WriteAllText(Program.NameDump+"stringliteral.json", JsonConvert.SerializeObject(stringLiterals, Formatting.Indented), new UTF8Encoding(false));
                 foreach (var i in metadata.metadataUsageDic[6]) //kIl2CppMetadataUsageMethodRef
                 {
                     var methodSpec = il2Cpp.methodSpecs[i.Value];
@@ -238,7 +238,7 @@ namespace Il2CppDumper
                 }
                 json.Addresses = orderedPointers;
             }
-            File.WriteAllText("script.json", JsonConvert.SerializeObject(json, Formatting.Indented));
+            File.WriteAllText(Program.NameDump+"script.json", JsonConvert.SerializeObject(json, Formatting.Indented));
             //il2cpp.h
             for (int i = 0; i < genericClassList.Count; i++)
             {
@@ -325,7 +325,7 @@ namespace Il2CppDumper
             sb.Append(headerStruct);
             sb.Append(headerClass);
             sb.Append(arrayClassHeader);
-            File.WriteAllText("il2cpp.h", sb.ToString());
+            File.WriteAllText(Program.NameDump+"il2cpp.h", sb.ToString());
         }
 
         private static string FixName(string str)

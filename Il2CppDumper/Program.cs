@@ -11,6 +11,7 @@ namespace Il2CppDumper
     class Program
     {
         private static Config config;
+        public static string NameDump;
 
         [STAThread]
         static void Main(string[] args)
@@ -80,6 +81,10 @@ namespace Il2CppDumper
             {
                 if (Init(il2cppBytes, metadataBytes, out var metadata, out var il2Cpp))
                 {
+                    Console.Write("Press Name: ");
+                    NameDump = Console.ReadLine()+"/";
+                    if (string.IsNullOrWhiteSpace(NameDump)) NameDump = "Dump/";
+                    Directory.CreateDirectory(NameDump);
                     Dump(metadata, il2Cpp);
                 }
             }

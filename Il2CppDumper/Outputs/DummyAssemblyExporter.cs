@@ -13,8 +13,8 @@ namespace Il2CppDumper
         {
             if (Directory.Exists("DummyDll"))
                 Directory.Delete("DummyDll", true);
-            Directory.CreateDirectory("DummyDll");
-            Directory.SetCurrentDirectory("DummyDll");
+            Directory.CreateDirectory(Program.NameDump+"DummyDll");
+            Directory.SetCurrentDirectory(Program.NameDump + "DummyDll");
             var dummy = new DummyAssemblyGenerator(metadata, il2Cpp);
             foreach (var assembly in dummy.Assemblies)
             {
