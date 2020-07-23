@@ -143,13 +143,16 @@ namespace Il2CppDumper
                             }
                         }
                         //fieldOffset
-                        var fieldOffset = il2Cpp.GetFieldOffsetFromIndex(index, i - typeDef.fieldStart, i, typeDefinition.IsValueType, fieldDefinition.IsStatic);
-                        if (fieldOffset >= 0)
+                        if (!fieldDefinition.IsLiteral)
                         {
-                            var customAttribute = new CustomAttribute(typeDefinition.Module.ImportReference(fieldOffsetAttribute));
-                            var offset = new CustomAttributeNamedArgument("Offset", new CustomAttributeArgument(stringType, $"0x{fieldOffset:X}"));
-                            customAttribute.Fields.Add(offset);
-                            fieldDefinition.CustomAttributes.Add(customAttribute);
+                            var fieldOffset = il2Cpp.GetFieldOffsetFromIndex(index, i - typeDef.fieldStart, i, typeDefinition.IsValueType, fieldDefinition.IsStatic);
+                            if (fieldOffset >= 0)
+                            {
+                                var customAttribute = new CustomAttribute(typeDefinition.Module.ImportReference(fieldOffsetAttribute));
+                                var offset = new CustomAttributeNamedArgument("Offset", new CustomAttributeArgument(stringType, $"0x{fieldOffset:X}"));
+                                customAttribute.Fields.Add(offset);
+                                fieldDefinition.CustomAttributes.Add(customAttribute);
+                            }
                         }
                     }
                     //method
@@ -556,7 +559,7 @@ namespace Il2CppDumper
                     return true;
                 case Il2CppTypeEnum.IL2CPP_TYPE_STRING:
                     var len = metadata.ReadInt32();
-                    value = Encoding.UTF8.GetString(metadata.ReadBytes(len));
+                    value = metadata.ReadString(len);
                     return true;
                 default:
                     value = pointer;
