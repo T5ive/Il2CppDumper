@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 #if NETFRAMEWORK
 using System.Windows.Forms;
@@ -182,20 +183,27 @@ namespace Il2CppDumper
             var version = config.ForceIl2CppVersion ? config.ForceVersion : metadata.Version;
             il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
             Console.WriteLine($"Il2Cpp Version: {il2Cpp.Version}");
+            if (il2Cpp.Version >= 27 && il2Cpp is ElfBase elf && elf.IsDumped)
+            {
+                Console.WriteLine("Input global-metadata.dat dump address:");
+                metadata.Address = Convert.ToUInt64(Console.ReadLine(), 16);
+            }
+
 
             Console.WriteLine("Searching...");
             try
             {
                 var flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length);
-#if NETFRAMEWORK
-                if (!flag && il2Cpp is PE)
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
-                    Console.WriteLine("Use custom PE loader");
-                    il2Cpp = PELoader.Load(il2cppPath);
-                    il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
-                    flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length);
+                    if (!flag && il2Cpp is PE)
+                    {
+                        Console.WriteLine("Use custom PE loader");
+                        il2Cpp = PELoader.Load(il2cppPath);
+                        il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
+                        flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length);
+                    }
                 }
-#endif
                 if (!flag)
                 {
                     flag = il2Cpp.Search();
