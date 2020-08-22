@@ -367,7 +367,7 @@ namespace Il2CppDumper
                     return;
             }
             sb.Append(headerStruct);
-            sb.Append(headerClass);
+           // sb.Append(headerClass);
             sb.Append(arrayClassHeader);
             sb.Append(methodInfoHeader);
             //File.WriteAllText(Program.NameDump+"il2cpp.h", sb.ToString()); MyFix
