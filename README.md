@@ -100,3 +100,4 @@ If you have a rooted Android phone, you can try my other project [Riru-Il2CppDum
 ## Credits
 
 - Jumboperson - [Il2CppDumper](https://github.com/Jumboperson/Il2CppDumper)
+- AndnixSH - [Il2CppDumper-GUI](https://github.com/AndnixSH/Il2CppDumper-GUI)
