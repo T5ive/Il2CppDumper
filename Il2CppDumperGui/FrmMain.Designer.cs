@@ -92,18 +92,18 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 102);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(101, 15);
+            this.label4.Size = new System.Drawing.Size(104, 15);
             this.label4.TabIndex = 3;
-            this.label4.Text = "CodeRegistration:";
+            this.label4.Text = "Code Registration:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(242, 105);
+            this.label5.Location = new System.Drawing.Point(239, 105);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(123, 15);
+            this.label5.Size = new System.Drawing.Size(126, 15);
             this.label5.TabIndex = 4;
-            this.label5.Text = "MetadataRegistration:";
+            this.label5.Text = "Metadata Registration:";
             // 
             // label6
             // 
