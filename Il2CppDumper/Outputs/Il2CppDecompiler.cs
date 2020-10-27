@@ -21,10 +21,14 @@ namespace Il2CppDumper
             il2Cpp = il2CppExecutor.il2Cpp;
         }
 
-        public void Decompile(Config config, string outputDir)
+        public void Decompile(Config config, string outputDir, int dumpType = 0)
         {
-            //var writer = new StreamWriter(new FileStream(Program.NameDump+"dump.cs", FileMode.Create), new UTF8Encoding(false));
-            var writer = new StreamWriter(new FileStream(outputDir + "dump.cs", FileMode.Create), new UTF8Encoding(false));
+            var writer = dumpType == 1
+                ? new StreamWriter(new FileStream(outputDir + "dump.cs", FileMode.Create),
+                    new UTF8Encoding(false))
+                : new StreamWriter(new FileStream(Program.NameDump + "dump.cs", FileMode.Create),
+                    new UTF8Encoding(false));
+
             //dump image
             for (var imageIndex = 0; imageIndex < metadata.imageDefs.Length; imageIndex++)
             {

@@ -98,7 +98,6 @@ namespace Il2CppDumper
                     NameDump = Console.ReadLine()+"/";
                     if (string.IsNullOrWhiteSpace(NameDump)) NameDump = "Dump/";
                     Directory.CreateDirectory(NameDump);
-                    //Dump(metadata, il2Cpp);
                     Dump(metadata, il2Cpp, outputDir);
                 }
             }

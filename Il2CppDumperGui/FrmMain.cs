@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 // https://github.com/AndnixSH/Il2CppDumper-GUI
 
 namespace Il2CppDumperGui
@@ -25,7 +26,7 @@ namespace Il2CppDumperGui
             InitializeComponent();
         }
 
-        #region Variable
+#region Variable
         public enum State
         {
             Idle,
@@ -34,18 +35,18 @@ namespace Il2CppDumperGui
         private readonly string RealPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string TempPath = Path.GetTempPath() + "\\";
         private static Config config;
-        #endregion
+#endregion
 
-        #region Load/Save
+#region Load/Save
         private void FrmMain_Load(object sender, EventArgs e)
         {
             Text += $@" - {Assembly.GetExecutingAssembly().GetName().Version}";
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
-        #endregion
+#endregion
 
-        #region Button
+#region Button
 
         private void btnFile_Click(object sender, EventArgs e)
         {
@@ -57,7 +58,7 @@ namespace Il2CppDumperGui
 
                 if (Properties.Settings.Default.AutoSetDir)
                 {
-                    txtDir.Text = Path.GetDirectoryName(txtFile.Text) + "\\";
+                    txtDir.Text = Path.GetDirectoryName(txtFile.Text) + @"\dumped\";
                 }
             }
         }
@@ -76,7 +77,7 @@ namespace Il2CppDumperGui
         {           
             if (openDir.ShowDialog() == DialogResult.OK)
             {
-                txtDir.Text = openDir.SelectedPath + "\\";
+                txtDir.Text = openDir.SelectedPath + @"\";
             }
         }
 
@@ -133,12 +134,99 @@ namespace Il2CppDumperGui
                 Dumper(txtFile.Text, txtDat.Text, txtDir.Text);
             });
 
+            //if ("copy PY")
+            var guiPath = AppDomain.CurrentDomain.BaseDirectory;
+            if (File.Exists(guiPath + "ghidra.py"))
+            {
+                if (!File.Exists(txtDir.Text + "ghidra.py"))
+                {
+                    WriteOutput("ghidra.py does not exist", Color.Red);
+                    try
+                    {
+                        File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
+                        WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
+                    }
+                    catch
+                    {
+                        WriteOutput("Can not create ghidra.py", Color.Red);
+                        return;
+                    }
+                }
+            }
+            if (File.Exists(guiPath + "ida.py"))
+            {
+                if (!File.Exists(txtDir.Text + "ida.py"))
+                {
+                    WriteOutput("ida.py does not exist", Color.Red);
+                    try
+                    {
+                        File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
+                        WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
+                    }
+                    catch
+                    {
+                        WriteOutput("Can not create ida.py", Color.Red);
+                        return;
+                    }
+                }
+            }
+            if (File.Exists(guiPath + "ida_py3.py"))
+            {
+                if (!File.Exists(txtDir.Text + "ida_py3.py"))
+                {
+                    WriteOutput("ida_py3.py does not exist", Color.Red);
+                    try
+                    {
+                        File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
+                        WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
+                    }
+                    catch
+                    {
+                        WriteOutput("Can not create ida_py3.py", Color.Red);
+                        return;
+                    }
+                }
+            }
+            if (File.Exists(guiPath + "ida_with_struct.py"))
+            {
+                if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
+                {
+                    WriteOutput("ida_with_struct.py does not exist", Color.Red);
+                    try
+                    {
+                        File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
+                        WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                    }
+                    catch
+                    {
+                        WriteOutput("Can not create ida_with_struct.py", Color.Red);
+                        return;
+                    }
+                }
+            }
+            if (File.Exists(guiPath + "ida_with_struct_py3.py"))
+            {
+                if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
+                {
+                    WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
+                    try
+                    {
+                        File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
+                        WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
+                    }
+                    catch
+                    {
+                        WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
+                        return;
+                    }
+                }
+            }
             FormState(State.Idle);
         }
 
-        #endregion
+#endregion
 
-        #region Dump
+#region Dump
         private void Dumper(string file, string metadataPath, string outputPath)
         {
             try
@@ -154,14 +242,8 @@ namespace Il2CppDumperGui
             }
         }
 
-        private bool Init(string il2cppPath, string metadataPath, out Metadata metadata, out Il2Cpp il2Cpp)
+        private bool Init(string il2CppPath, string metadataPath, out Metadata metadata, out Il2Cpp il2Cpp)
         {
-            string Mach_O = "2";
-            Invoke(new Action(delegate ()
-            {
-                Mach_O = rad32.Checked ? "1" : "2";
-            }));
-
             WriteOutput("Read config...", Color.Black);
             if (File.Exists(RealPath + "config.json"))
             {
@@ -179,12 +261,13 @@ namespace Il2CppDumperGui
             WriteOutput($"Metadata Version: {metadata.Version}");
 
             WriteOutput("Initializing il2cpp file...");
-            var il2cppBytes = File.ReadAllBytes(il2cppPath);
-            var il2cppMagic = BitConverter.ToUInt32(il2cppBytes, 0);
-            var il2CppMemory = new MemoryStream(il2cppBytes);
-            switch (il2cppMagic)
+            var il2CppBytes = File.ReadAllBytes(il2CppPath);
+            var il2CppMagic = BitConverter.ToUInt32(il2CppBytes, 0);
+            var il2CppMemory = new MemoryStream(il2CppBytes);
+            switch (il2CppMagic)
             {
                 default:
+                    WriteOutput("ERROR: il2cpp file not supported.");
                     throw new NotSupportedException("ERROR: il2cpp file not supported.");
                 case 0x6D736100:
                     var web = new WebAssembly(il2CppMemory);
@@ -198,7 +281,7 @@ namespace Il2CppDumperGui
                     il2Cpp = new PE(il2CppMemory);
                     break;
                 case 0x464c457f: //ELF
-                    if (il2cppBytes[4] == 2) //ELF64
+                    if (il2CppBytes[4] == 2) //ELF64
                     {
                         il2Cpp = new Elf64(il2CppMemory);
                     }
@@ -209,19 +292,19 @@ namespace Il2CppDumperGui
                     break;
                 case 0xCAFEBABE: //FAT Mach-O
                 case 0xBEBAFECA:
-                    var machofat = new MachoFat(new MemoryStream(il2cppBytes));
-                    Console.Write("Select Platform: ");
+                    var machofat = new MachoFat(new MemoryStream(il2CppBytes));
+                    WriteOutput("Select Platform: ");
                     for (var i = 0; i < machofat.fats.Length; i++)
                     {
                         var fat = machofat.fats[i];
-                        Console.Write(fat.magic == 0xFEEDFACF ? $"{i + 1}.64bit " : $"{i + 1}.32bit ");
+                        WriteOutput(fat.magic == 0xFEEDFACF ? $"{i + 1}.64bit " : $"{i + 1}.32bit ");
                     }
                     WriteOutput("");
                     var key = Console.ReadKey(true);
                     var index = int.Parse(key.KeyChar.ToString()) - 1;
                     var magic = machofat.fats[index % 2].magic;
-                    il2cppBytes = machofat.GetMacho(index % 2);
-                    il2CppMemory = new MemoryStream(il2cppBytes);
+                    il2CppBytes = machofat.GetMacho(index % 2);
+                    il2CppMemory = new MemoryStream(il2CppBytes);
                     if (magic == 0xFEEDFACF)
                         goto case 0xFEEDFACF;
                     else
@@ -252,7 +335,7 @@ namespace Il2CppDumperGui
                     if (!flag && il2Cpp is PE)
                     {
                         WriteOutput("Use custom PE loader");
-                        il2Cpp = PELoader.Load(il2cppPath);
+                        il2Cpp = PELoader.Load(il2CppPath);
                         il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
                         flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length);
                     }
@@ -268,9 +351,9 @@ namespace Il2CppDumperGui
                 if (!flag)
                 {
                     WriteOutput("ERROR: Can't use auto mode to process file, try manual mode.");
-                    Console.Write("Input CodeRegistration: ");
+                    WriteOutput("Input CodeRegistration: ");
                     var codeRegistration = Convert.ToUInt64(Console.ReadLine(), 16);
-                    Console.Write("Input MetadataRegistration: ");
+                    WriteOutput("Input MetadataRegistration: ");
                     var metadataRegistration = Convert.ToUInt64(Console.ReadLine(), 16);
                     il2Cpp.Init(codeRegistration, metadataRegistration);
                     return true;
@@ -290,13 +373,13 @@ namespace Il2CppDumperGui
             WriteOutput("Dumping...");
             var executor = new Il2CppExecutor(metadata, il2Cpp);
             var decompiler = new Il2CppDecompiler(executor);
-            decompiler.Decompile(config, outputDir);
+            decompiler.Decompile(config, outputDir,1);
             WriteOutput("Done!");
             if (config.GenerateScript)
             {
                 WriteOutput("Generate script...");
                 var scriptGenerator = new ScriptGenerator(executor);
-                scriptGenerator.WriteScript(outputDir);
+                scriptGenerator.WriteScript(outputDir,1);
                 WriteOutput("Done!");
             }
             if (config.GenerateDummyDll)
@@ -304,12 +387,13 @@ namespace Il2CppDumperGui
                 WriteOutput("Generate dummy dll...");
                 DummyAssemblyExporter.Export(executor, outputDir);
                 WriteOutput("Done!");
+                Directory.SetCurrentDirectory(RealPath); //Fix read-only directory permission
             }            
         }
 
-        #endregion
+#endregion
 
-        #region Drag/Drop
+#region Drag/Drop
         private async void FrmMain_DragDropAsync(object sender, DragEventArgs e)
         {
             try
@@ -318,13 +402,13 @@ namespace Il2CppDumperGui
 
                 if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
 
-                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 if (files.Length > 1)
                 {
                     DeleteFile(TempPath + "global-metadata.dat");
                     DeleteFile(TempPath + "libil2cpp.so");
                 }
-                string outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped";
+                var outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped";
                 if (Properties.Settings.Default.AutoSetDir)
                 {
                     txtDir.Text = outputPath;
@@ -365,7 +449,9 @@ namespace Il2CppDumperGui
                     }
 
                     if (Properties.Settings.Default.AutoSetDir)
-                        txtDir.Text = Path.GetDirectoryName(file);
+                    {
+                        txtDir.Text = Path.GetDirectoryName(file) + @"\dumped\";
+                    }
                 }
             }
 
@@ -396,7 +482,7 @@ namespace Il2CppDumperGui
             }
         }
 
-        string FileDir(string path)
+        private string FileDir(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
@@ -405,7 +491,7 @@ namespace Il2CppDumperGui
             return path;
         }
 
-        void DeleteFile(string file)
+        private void DeleteFile(string file)
         {
             if (File.Exists(file))
             {
@@ -413,9 +499,9 @@ namespace Il2CppDumperGui
             }
         }
 
-        #endregion
+#endregion
 
-        #region Copy to clipboard
+#region Copy to clipboard
         private void menuCopy_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(rbLog.SelectedText);
@@ -426,9 +512,9 @@ namespace Il2CppDumperGui
             rbLog.ScrollToCaret();
         }
 
-        #endregion
+#endregion
 
-        #region Logging
+#region Logging
         public static void AppendText(RichTextBox box, string text, Color color)
         {
             box.SelectionStart = box.TextLength;
@@ -459,9 +545,9 @@ namespace Il2CppDumperGui
                 TextToLogs(str + Environment.NewLine, Color.Black);
             }));
         }
-        #endregion
+#endregion
 
-        #region Form Controller
+#region Form Controller
         private void FormState(State state)
         {
             if (state == State.Running)
@@ -518,21 +604,21 @@ namespace Il2CppDumperGui
             }
         }
 
-        #endregion
+#endregion
 
-        #region Auto Dump
+#region Auto Dump
         async Task iOSDump(string file, string outputPath)
         {
             await Task.Factory.StartNew(() =>
             {
-                using (ZipArchive archive = ZipFile.OpenRead(file))
+                using (var archive = ZipFile.OpenRead(file))
                 {
                     var ipaBinaryFolder = archive.Entries.FirstOrDefault(f => f.FullName.StartsWith("Payload/") && f.FullName.EndsWith(".app/") && f.FullName.Count(x => x == '/') == 2);
 
                     if (ipaBinaryFolder != null)
                     {
-                        Regex myRegex3 = new Regex(@"(?<=Payload\/)(.*?)(?=.app\/)", RegexOptions.None);
-                        Match match = myRegex3.Match(ipaBinaryFolder.FullName);
+                        var myRegex3 = new Regex(@"(?<=Payload\/)(.*?)(?=.app\/)", RegexOptions.None);
+                        var match = myRegex3.Match(ipaBinaryFolder.FullName);
 
                         var ipaBinaryName = match.ToString();
                         var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Data/Managed/Metadata/global-metadata.dat");
@@ -574,7 +660,7 @@ namespace Il2CppDumperGui
         {
             await Task.Factory.StartNew(() =>
             {
-                using (ZipArchive archive = ZipFile.OpenRead(file))
+                using (var archive = ZipFile.OpenRead(file))
                 {
                     var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
                     var metadataPath = archive.Entries.FirstOrDefault(f => f.FullName.Contains("assets/bin/Data/Managed/etc/"));
@@ -595,7 +681,7 @@ namespace Il2CppDumperGui
                     {
                         metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
 
-                        foreach (ZipArchiveEntry entry in archive.Entries)
+                        foreach (var entry in archive.Entries)
                         {
                             if (entry.FullName.Equals(@"lib/armeabi-v7a/libil2cpp.so"))
                             {
@@ -640,7 +726,7 @@ namespace Il2CppDumperGui
         {
             await Task.Factory.StartNew(() =>
             {
-                using (ZipArchive archive = ZipFile.OpenRead(file))
+                using (var archive = ZipFile.OpenRead(file))
                 {
                     var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
                     var metadataPath = archive.Entries.FirstOrDefault(f => f.FullName.Contains("assets/bin/Data/Managed/etc/"));
@@ -665,6 +751,6 @@ namespace Il2CppDumperGui
                 }
             });
         }
-        #endregion
+#endregion
     }
 }

@@ -36,7 +36,7 @@ namespace Il2CppDumper
             il2Cpp = il2CppExecutor.il2Cpp;
         }
 
-        public void WriteScript(string outputDir)
+        public void WriteScript(string outputDir, int dumpType = 0)
         {
             var json = new ScriptJson();
             // 生成唯一名称
@@ -276,8 +276,17 @@ namespace Il2CppDumper
                     value = x.Value,
                     address = $"0x{x.Address:X}"
                 }).ToArray();
-                //File.WriteAllText(Program.NameDump+"stringliteral.json", JsonConvert.SerializeObject(stringLiterals, Formatting.Indented), new UTF8Encoding(false));
-                File.WriteAllText(outputDir + "stringliteral.json", JsonConvert.SerializeObject(stringLiterals, Formatting.Indented), new UTF8Encoding(false));
+
+                if (dumpType == 1)
+                {
+                    File.WriteAllText(outputDir + "stringliteral.json",
+                        JsonConvert.SerializeObject(stringLiterals, Formatting.Indented), new UTF8Encoding(false));
+                }
+                else
+                {
+                    File.WriteAllText(Program.NameDump + "stringliteral.json", JsonConvert.SerializeObject(stringLiterals, Formatting.Indented), new UTF8Encoding(false));
+                }
+                
                 foreach (var i in metadata.metadataUsageDic[6]) //kIl2CppMetadataUsageMethodRef
                 {
                     var methodSpec = il2Cpp.methodSpecs[i.Value];
@@ -324,8 +333,16 @@ namespace Il2CppDumper
                 orderedPointers[i] = il2Cpp.GetRVA(orderedPointers[i]);
             }
             json.Addresses = orderedPointers;
-            //File.WriteAllText(Program.NameDump+"script.json", JsonConvert.SerializeObject(json, Formatting.Indented));
-            File.WriteAllText(outputDir + "script.json", JsonConvert.SerializeObject(json, Formatting.Indented));
+            if (dumpType == 1)
+            {
+                File.WriteAllText(outputDir + "script.json", JsonConvert.SerializeObject(json, Formatting.Indented));
+            }
+            else
+            {
+                File.WriteAllText(Program.NameDump + "script.json",
+                    JsonConvert.SerializeObject(json, Formatting.Indented));
+            }
+
             //il2cpp.h
             for (int i = 0; i < genericClassList.Count; i++)
             {
@@ -370,8 +387,14 @@ namespace Il2CppDumper
            // sb.Append(headerClass);
             sb.Append(arrayClassHeader);
             sb.Append(methodInfoHeader);
-            //File.WriteAllText(Program.NameDump+"il2cpp.h", sb.ToString()); MyFix
-            File.WriteAllText(outputDir + "il2cpp.h", sb.ToString());
+            if (dumpType == 1)
+            {
+                File.WriteAllText(outputDir + "il2cpp.h", sb.ToString());
+            }
+            else
+            {
+                File.WriteAllText(Program.NameDump + "il2cpp.h", sb.ToString());
+            }
         }
 
         private static string FixName(string str)
