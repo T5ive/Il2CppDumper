@@ -134,93 +134,7 @@ namespace Il2CppDumperGui
                 Dumper(txtFile.Text, txtDat.Text, txtDir.Text);
             });
 
-            //if ("copy PY")
-            var guiPath = AppDomain.CurrentDomain.BaseDirectory;
-            if (File.Exists(guiPath + "ghidra.py"))
-            {
-                if (!File.Exists(txtDir.Text + "ghidra.py"))
-                {
-                    WriteOutput("ghidra.py does not exist", Color.Red);
-                    try
-                    {
-                        File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
-                        WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
-                    }
-                    catch
-                    {
-                        WriteOutput("Can not create ghidra.py", Color.Red);
-                        return;
-                    }
-                }
-            }
-            if (File.Exists(guiPath + "ida.py"))
-            {
-                if (!File.Exists(txtDir.Text + "ida.py"))
-                {
-                    WriteOutput("ida.py does not exist", Color.Red);
-                    try
-                    {
-                        File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
-                        WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
-                    }
-                    catch
-                    {
-                        WriteOutput("Can not create ida.py", Color.Red);
-                        return;
-                    }
-                }
-            }
-            if (File.Exists(guiPath + "ida_py3.py"))
-            {
-                if (!File.Exists(txtDir.Text + "ida_py3.py"))
-                {
-                    WriteOutput("ida_py3.py does not exist", Color.Red);
-                    try
-                    {
-                        File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
-                        WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
-                    }
-                    catch
-                    {
-                        WriteOutput("Can not create ida_py3.py", Color.Red);
-                        return;
-                    }
-                }
-            }
-            if (File.Exists(guiPath + "ida_with_struct.py"))
-            {
-                if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
-                {
-                    WriteOutput("ida_with_struct.py does not exist", Color.Red);
-                    try
-                    {
-                        File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
-                        WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
-                    }
-                    catch
-                    {
-                        WriteOutput("Can not create ida_with_struct.py", Color.Red);
-                        return;
-                    }
-                }
-            }
-            if (File.Exists(guiPath + "ida_with_struct_py3.py"))
-            {
-                if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
-                {
-                    WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
-                    try
-                    {
-                        File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
-                        WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
-                    }
-                    catch
-                    {
-                        WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
-                        return;
-                    }
-                }
-            }
+           
             FormState(State.Idle);
         }
 
@@ -234,6 +148,110 @@ namespace Il2CppDumperGui
                 if (Init(file, metadataPath, out var metadata, out var il2Cpp))
                 {
                     Dump(metadata, il2Cpp, outputPath);
+                    //if ("copy PY")
+                    var guiPath = AppDomain.CurrentDomain.BaseDirectory;
+                    if (File.Exists(guiPath + "ghidra.py"))
+                    {
+                        if (!File.Exists(txtDir.Text + "ghidra.py"))
+                        {
+                            WriteOutput("ghidra.py does not exist", Color.Red);
+                            try
+                            {
+                                File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
+                                WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
+                            }
+                            catch
+                            {
+                                WriteOutput("Can not create ghidra.py", Color.Red);
+                                return;
+                            }
+                        }
+                    }
+                    if (File.Exists(guiPath + "ghidra_with_struct.py"))
+                    {
+                        if (!File.Exists(txtDir.Text + "ghidra_with_struct.py"))
+                        {
+                            WriteOutput("ghidra_with_struct.py does not exist", Color.Red);
+                            try
+                            {
+                                File.Copy(guiPath + "ghidra_with_struct.py", txtDir.Text + "ghidra_with_struct.py");
+                                WriteOutput($"Create ghidra_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                            }
+                            catch
+                            {
+                                WriteOutput("Can not create ghidra_with_struct.py", Color.Red);
+                                return;
+                            }
+                        }
+                    }
+                    if (File.Exists(guiPath + "ida.py"))
+                    {
+                        if (!File.Exists(txtDir.Text + "ida.py"))
+                        {
+                            WriteOutput("ida.py does not exist", Color.Red);
+                            try
+                            {
+                                File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
+                                WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
+                            }
+                            catch
+                            {
+                                WriteOutput("Can not create ida.py", Color.Red);
+                                return;
+                            }
+                        }
+                    }
+                    if (File.Exists(guiPath + "ida_py3.py"))
+                    {
+                        if (!File.Exists(txtDir.Text + "ida_py3.py"))
+                        {
+                            WriteOutput("ida_py3.py does not exist", Color.Red);
+                            try
+                            {
+                                File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
+                                WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
+                            }
+                            catch
+                            {
+                                WriteOutput("Can not create ida_py3.py", Color.Red);
+                                return;
+                            }
+                        }
+                    }
+                    if (File.Exists(guiPath + "ida_with_struct.py"))
+                    {
+                        if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
+                        {
+                            WriteOutput("ida_with_struct.py does not exist", Color.Red);
+                            try
+                            {
+                                File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
+                                WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                            }
+                            catch
+                            {
+                                WriteOutput("Can not create ida_with_struct.py", Color.Red);
+                                return;
+                            }
+                        }
+                    }
+                    if (File.Exists(guiPath + "ida_with_struct_py3.py"))
+                    {
+                        if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
+                        {
+                            WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
+                            try
+                            {
+                                File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
+                                WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
+                            }
+                            catch
+                            {
+                                WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -408,14 +426,14 @@ namespace Il2CppDumperGui
                     DeleteFile(TempPath + "global-metadata.dat");
                     DeleteFile(TempPath + "libil2cpp.so");
                 }
-                var outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped";
+                var outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
                 if (Properties.Settings.Default.AutoSetDir)
                 {
                     txtDir.Text = outputPath;
                 }
                 else
                 {
-                    outputPath = txtDir.Text + Path.GetFileNameWithoutExtension(files[0]) + "_dumped";
+                    outputPath = txtDir.Text + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
                 }
 
                 FileDir(outputPath);
