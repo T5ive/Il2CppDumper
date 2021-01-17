@@ -33,8 +33,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cbExtBin = new System.Windows.Forms.CheckBox();
             this.btnApply = new System.Windows.Forms.Button();
-            this.cbPy = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.clbScripts = new System.Windows.Forms.CheckedListBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -84,7 +84,7 @@
             // 
             // btnApply
             // 
-            this.btnApply.Location = new System.Drawing.Point(12, 195);
+            this.btnApply.Location = new System.Drawing.Point(12, 282);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(195, 23);
             this.btnApply.TabIndex = 4;
@@ -92,31 +92,36 @@
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
-            // cbPy
-            // 
-            this.cbPy.AutoSize = true;
-            this.cbPy.Location = new System.Drawing.Point(6, 22);
-            this.cbPy.Name = "cbPy";
-            this.cbPy.Size = new System.Drawing.Size(97, 19);
-            this.cbPy.TabIndex = 0;
-            this.cbPy.Text = "Copy .py files";
-            this.cbPy.UseVisualStyleBackColor = true;
-            // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.cbPy);
+            this.groupBox3.Controls.Add(this.clbScripts);
             this.groupBox3.Location = new System.Drawing.Point(12, 134);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(195, 55);
+            this.groupBox3.Size = new System.Drawing.Size(195, 142);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Auto copy .py";
+            this.groupBox3.Text = "Auto copy script files";
+            // 
+            // clbScripts
+            // 
+            this.clbScripts.FormattingEnabled = true;
+            this.clbScripts.Items.AddRange(new object[] {
+            "ghidra.py",
+            "ghidra_with_struct.py",
+            "ida.py",
+            "ida_py3.py",
+            "ida_with_struct.py",
+            "ida_with_struct_py3.py"});
+            this.clbScripts.Location = new System.Drawing.Point(6, 22);
+            this.clbScripts.Name = "clbScripts";
+            this.clbScripts.Size = new System.Drawing.Size(183, 112);
+            this.clbScripts.TabIndex = 1;
             // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(219, 228);
+            this.ClientSize = new System.Drawing.Size(219, 317);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.groupBox2);
@@ -126,12 +131,12 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Settings";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.FrmSettings_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -143,7 +148,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox cbExtBin;
         private System.Windows.Forms.Button btnApply;
-        private System.Windows.Forms.CheckBox cbPy;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckedListBox clbScripts;
     }
 }

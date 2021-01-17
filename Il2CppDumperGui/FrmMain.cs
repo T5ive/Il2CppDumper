@@ -20,13 +20,13 @@ namespace Il2CppDumperGui
 {
     public partial class FrmMain : Form
     {
-       
+
         public FrmMain()
         {
             InitializeComponent();
         }
 
-#region Variable
+        #region Variable
         public enum State
         {
             Idle,
@@ -35,18 +35,18 @@ namespace Il2CppDumperGui
         private readonly string RealPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string TempPath = Path.GetTempPath() + "\\";
         private static Config config;
-#endregion
+        #endregion
 
-#region Load/Save
+        #region Load/Save
         private void FrmMain_Load(object sender, EventArgs e)
         {
             Text += $@" - {Assembly.GetExecutingAssembly().GetName().Version}";
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
 
-#endregion
+        #endregion
 
-#region Button
+        #region Button
 
         private void btnFile_Click(object sender, EventArgs e)
         {
@@ -74,7 +74,7 @@ namespace Il2CppDumperGui
         }
 
         private void btnDir_Click(object sender, EventArgs e)
-        {           
+        {
             if (openDir.ShowDialog() == DialogResult.OK)
             {
                 txtDir.Text = openDir.SelectedPath + @"\";
@@ -130,125 +130,147 @@ namespace Il2CppDumperGui
             FormState(State.Running);
 
             await Task.Factory.StartNew(() =>
-            {                
+            {
                 Dumper(txtFile.Text, txtDat.Text, txtDir.Text);
             });
 
-           
+
             FormState(State.Idle);
         }
 
-#endregion
+        #endregion
 
-#region Dump
+        #region Dump
+
         private void Dumper(string file, string metadataPath, string outputPath)
         {
             try
-            { 
+            {
                 if (Init(file, metadataPath, out var metadata, out var il2Cpp))
                 {
                     Dump(metadata, il2Cpp, outputPath);
-                    //if ("copy PY")
+
                     var guiPath = AppDomain.CurrentDomain.BaseDirectory;
-                    if (File.Exists(guiPath + "ghidra.py"))
+
+                    if (Properties.Settings.Default.ghidra)
                     {
-                        if (!File.Exists(txtDir.Text + "ghidra.py"))
+                        if (File.Exists(guiPath + "ghidra.py"))
                         {
-                            WriteOutput("ghidra.py does not exist", Color.Red);
-                            try
+                            if (!File.Exists(txtDir.Text + "ghidra.py"))
                             {
-                                File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
-                                WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
-                            }
-                            catch
-                            {
-                                WriteOutput("Can not create ghidra.py", Color.Red);
-                                return;
+                                WriteOutput("ghidra.py does not exist", Color.Red);
+                                try
+                                {
+                                    File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
+                                    WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
+                                }
+                                catch
+                                {
+                                    WriteOutput("Can not create ghidra.py", Color.Red);
+                                    return;
+                                }
                             }
                         }
                     }
-                    if (File.Exists(guiPath + "ghidra_with_struct.py"))
+                    if (Properties.Settings.Default.ghidra_with_struct)
                     {
-                        if (!File.Exists(txtDir.Text + "ghidra_with_struct.py"))
+                        if (File.Exists(guiPath + "ghidra_with_struct.py"))
                         {
-                            WriteOutput("ghidra_with_struct.py does not exist", Color.Red);
-                            try
+                            if (!File.Exists(txtDir.Text + "ghidra_with_struct.py"))
                             {
-                                File.Copy(guiPath + "ghidra_with_struct.py", txtDir.Text + "ghidra_with_struct.py");
-                                WriteOutput($"Create ghidra_with_struct.py at {txtDir.Text}", Color.LimeGreen);
-                            }
-                            catch
-                            {
-                                WriteOutput("Can not create ghidra_with_struct.py", Color.Red);
-                                return;
+                                WriteOutput("ghidra_with_struct.py does not exist", Color.Red);
+                                try
+                                {
+                                    File.Copy(guiPath + "ghidra_with_struct.py", txtDir.Text + "ghidra_with_struct.py");
+                                    WriteOutput($"Create ghidra_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                                }
+                                catch
+                                {
+                                    WriteOutput("Can not create ghidra_with_struct.py", Color.Red);
+                                    return;
+                                }
                             }
                         }
                     }
-                    if (File.Exists(guiPath + "ida.py"))
+                    if (Properties.Settings.Default.ida)
                     {
-                        if (!File.Exists(txtDir.Text + "ida.py"))
+                        if (File.Exists(guiPath + "ida.py"))
                         {
-                            WriteOutput("ida.py does not exist", Color.Red);
-                            try
+                            if (!File.Exists(txtDir.Text + "ida.py"))
                             {
-                                File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
-                                WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
-                            }
-                            catch
-                            {
-                                WriteOutput("Can not create ida.py", Color.Red);
-                                return;
+                                WriteOutput("ida.py does not exist", Color.Red);
+                                try
+                                {
+                                    File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
+                                    WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
+                                }
+                                catch
+                                {
+                                    WriteOutput("Can not create ida.py", Color.Red);
+                                    return;
+                                }
                             }
                         }
                     }
-                    if (File.Exists(guiPath + "ida_py3.py"))
+                    if (Properties.Settings.Default.ida_py3)
                     {
-                        if (!File.Exists(txtDir.Text + "ida_py3.py"))
+                        if (File.Exists(guiPath + "ida_py3.py"))
                         {
-                            WriteOutput("ida_py3.py does not exist", Color.Red);
-                            try
+                            if (!File.Exists(txtDir.Text + "ida_py3.py"))
                             {
-                                File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
-                                WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
-                            }
-                            catch
-                            {
-                                WriteOutput("Can not create ida_py3.py", Color.Red);
-                                return;
+                                WriteOutput("ida_py3.py does not exist", Color.Red);
+                                try
+                                {
+                                    File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
+                                    WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
+                                }
+                                catch
+                                {
+                                    WriteOutput("Can not create ida_py3.py", Color.Red);
+                                    return;
+                                }
                             }
                         }
                     }
-                    if (File.Exists(guiPath + "ida_with_struct.py"))
+
+                    if (Properties.Settings.Default.ida_with_struct)
                     {
-                        if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
+                        if (File.Exists(guiPath + "ida_with_struct.py"))
                         {
-                            WriteOutput("ida_with_struct.py does not exist", Color.Red);
-                            try
+                            if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
                             {
-                                File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
-                                WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
-                            }
-                            catch
-                            {
-                                WriteOutput("Can not create ida_with_struct.py", Color.Red);
-                                return;
+                                WriteOutput("ida_with_struct.py does not exist", Color.Red);
+                                try
+                                {
+                                    File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
+                                    WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                                }
+                                catch
+                                {
+                                    WriteOutput("Can not create ida_with_struct.py", Color.Red);
+                                    return;
+                                }
                             }
                         }
                     }
-                    if (File.Exists(guiPath + "ida_with_struct_py3.py"))
+
+                    if (Properties.Settings.Default.ida_with_struct_py3)
                     {
-                        if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
+                        if (File.Exists(guiPath + "ida_with_struct_py3.py"))
                         {
-                            WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
-                            try
+                            if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
                             {
-                                File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
-                                WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
-                            }
-                            catch
-                            {
-                                WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
-                                return;
+                                WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
+                                try
+                                {
+                                    File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
+                                    WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
+                                }
+                                catch
+                                {
+                                    WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -391,13 +413,13 @@ namespace Il2CppDumperGui
             WriteOutput("Dumping...");
             var executor = new Il2CppExecutor(metadata, il2Cpp);
             var decompiler = new Il2CppDecompiler(executor);
-            decompiler.Decompile(config, outputDir,1);
+            decompiler.Decompile(config, outputDir, 1);
             WriteOutput("Done!");
             if (config.GenerateScript)
             {
                 WriteOutput("Generate script...");
                 var scriptGenerator = new ScriptGenerator(executor);
-                scriptGenerator.WriteScript(outputDir,1);
+                scriptGenerator.WriteScript(outputDir, 1);
                 WriteOutput("Done!");
             }
             if (config.GenerateDummyDll)
@@ -406,12 +428,12 @@ namespace Il2CppDumperGui
                 DummyAssemblyExporter.Export(executor, outputDir);
                 WriteOutput("Done!");
                 Directory.SetCurrentDirectory(RealPath); //Fix read-only directory permission
-            }            
+            }
         }
 
-#endregion
+        #endregion
 
-#region Drag/Drop
+        #region Drag/Drop
         private async void FrmMain_DragDropAsync(object sender, DragEventArgs e)
         {
             try
@@ -517,9 +539,9 @@ namespace Il2CppDumperGui
             }
         }
 
-#endregion
+        #endregion
 
-#region Copy to clipboard
+        #region Copy to clipboard
         private void menuCopy_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(rbLog.SelectedText);
@@ -530,9 +552,9 @@ namespace Il2CppDumperGui
             rbLog.ScrollToCaret();
         }
 
-#endregion
+        #endregion
 
-#region Logging
+        #region Logging
         public static void AppendText(RichTextBox box, string text, Color color)
         {
             box.SelectionStart = box.TextLength;
@@ -563,9 +585,9 @@ namespace Il2CppDumperGui
                 TextToLogs(str + Environment.NewLine, Color.Black);
             }));
         }
-#endregion
+        #endregion
 
-#region Form Controller
+        #region Form Controller
         private void FormState(State state)
         {
             if (state == State.Running)
@@ -622,9 +644,9 @@ namespace Il2CppDumperGui
             }
         }
 
-#endregion
+        #endregion
 
-#region Auto Dump
+        #region Auto Dump
         async Task iOSDump(string file, string outputPath)
         {
             await Task.Factory.StartNew(() =>
@@ -769,6 +791,6 @@ namespace Il2CppDumperGui
                 }
             });
         }
-#endregion
+        #endregion
     }
 }
