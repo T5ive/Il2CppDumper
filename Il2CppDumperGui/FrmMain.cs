@@ -463,6 +463,10 @@ namespace Il2CppDumperGui
                 foreach (var file in files)
                 {
                     var ext = Path.GetExtension(file);
+                    if(ext.Equals(".so"))
+                    {
+                        txtFile.Text = file;
+                    }
                     if (ext.Equals(".dat"))
                     {
                         txtDat.Text = file;
@@ -477,6 +481,11 @@ namespace Il2CppDumperGui
                         }
                         else
                             await APKDump(file, outputPath);
+                    }
+                    else if (ext.Equals(".apks") || ext.Equals(".xapk"))
+                    {
+                        rbLog.Text = "";
+                        await APKsDump(file, outputPath);
                     }
                     else if (ext.Equals(".ipa"))
                     {
@@ -787,6 +796,70 @@ namespace Il2CppDumperGui
                     if (File.Exists(TempPath + "libil2cpp.so") && File.Exists(TempPath + "global-metadata.dat"))
                     {
                         Dumper(TempPath + "libil2cpp.so", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
+                    }
+                }
+            });
+        }
+
+        async Task APKsDump(string file, string outputPath)
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                using var archive = ZipFile.OpenRead(file);
+                foreach (var entryApks in archive.Entries)
+                {
+                    if (entryApks.FullName.EndsWith(".apk", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var apkFile = Path.Combine(TempPath, entryApks.FullName);
+                        entryApks.ExtractToFile(apkFile, true);
+                        using var entryBase = ZipFile.OpenRead(apkFile);
+                        var binaryFile = entryBase.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
+                        var metadataFile = entryBase.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
+
+                        if (metadataFile != null)
+                        {
+                            metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
+                        }
+
+                        if (binaryFile != null)
+                        {
+                           binaryFile.ExtractToFile(TempPath + "libil2cpp.so", true);
+
+                            foreach (var entry in entryBase.Entries)
+                            {
+                                if (entry.FullName.Equals(@"lib/armeabi-v7a/libil2cpp.so"))
+                                {
+                                    WriteOutput("Dumping ARMv7...", Color.Chartreuse);
+
+                                    if (Properties.Settings.Default.extBin)
+                                        entry.ExtractToFile(FileDir(outputPath + "\\ARMv7\\libil2cpp.so"), true);
+                                    entry.ExtractToFile(TempPath + "libil2cpparmv7", true);
+                                    Dumper(TempPath + "libil2cpparmv7", TempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
+                                }
+
+                                if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so"))
+                                {
+                                    WriteOutput("Dumping ARM64...", Color.Chartreuse);
+
+                                    if (Properties.Settings.Default.extBin)
+                                        entry.ExtractToFile(FileDir(outputPath + "\\ARM64\\libil2cpp.so"), true);
+                                    entry.ExtractToFile(TempPath + "libil2cpparm64", true);
+                                    Dumper(TempPath + "libil2cpparm64", TempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
+                                }
+
+                                if (entry.FullName.Equals(@"lib/x86/libil2cpp.so"))
+                                {
+                                    WriteOutput("Dumping x86...", Color.Chartreuse);
+
+                                    if (Properties.Settings.Default.extBin)
+                                        entry.ExtractToFile(FileDir(outputPath + "\\x86\\libil2cpp.so"), true);
+                                    entry.ExtractToFile(TempPath + "libil2cppx86", true);
+                                    Dumper(TempPath + "libil2cppx86", TempPath + "global-metadata.dat", FileDir(outputPath + "\\x86\\"));
+                                }
+                            }
+                        }
+                        entryBase.Dispose();
+                        File.Delete(apkFile);
                     }
                 }
             });
