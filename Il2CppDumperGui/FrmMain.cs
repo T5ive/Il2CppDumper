@@ -46,7 +46,7 @@ namespace Il2CppDumperGui
 
         #endregion
 
-        #region Button
+        #region Button EventArgs
 
         private void btnFile_Click(object sender, EventArgs e)
         {
@@ -150,136 +150,138 @@ namespace Il2CppDumperGui
                 if (Init(file, metadataPath, out var metadata, out var il2Cpp))
                 {
                     Dump(metadata, il2Cpp, outputPath);
-
-                    var guiPath = AppDomain.CurrentDomain.BaseDirectory;
-
-                    if (Properties.Settings.Default.ghidra)
-                    {
-                        if (File.Exists(guiPath + "ghidra.py"))
-                        {
-                            if (!File.Exists(txtDir.Text + "ghidra.py"))
-                            {
-                                WriteOutput("ghidra.py does not exist", Color.Red);
-                                try
-                                {
-                                    File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
-                                    WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
-                                }
-                                catch
-                                {
-                                    WriteOutput("Can not create ghidra.py", Color.Red);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    if (Properties.Settings.Default.ghidra_with_struct)
-                    {
-                        if (File.Exists(guiPath + "ghidra_with_struct.py"))
-                        {
-                            if (!File.Exists(txtDir.Text + "ghidra_with_struct.py"))
-                            {
-                                WriteOutput("ghidra_with_struct.py does not exist", Color.Red);
-                                try
-                                {
-                                    File.Copy(guiPath + "ghidra_with_struct.py", txtDir.Text + "ghidra_with_struct.py");
-                                    WriteOutput($"Create ghidra_with_struct.py at {txtDir.Text}", Color.LimeGreen);
-                                }
-                                catch
-                                {
-                                    WriteOutput("Can not create ghidra_with_struct.py", Color.Red);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    if (Properties.Settings.Default.ida)
-                    {
-                        if (File.Exists(guiPath + "ida.py"))
-                        {
-                            if (!File.Exists(txtDir.Text + "ida.py"))
-                            {
-                                WriteOutput("ida.py does not exist", Color.Red);
-                                try
-                                {
-                                    File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
-                                    WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
-                                }
-                                catch
-                                {
-                                    WriteOutput("Can not create ida.py", Color.Red);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    if (Properties.Settings.Default.ida_py3)
-                    {
-                        if (File.Exists(guiPath + "ida_py3.py"))
-                        {
-                            if (!File.Exists(txtDir.Text + "ida_py3.py"))
-                            {
-                                WriteOutput("ida_py3.py does not exist", Color.Red);
-                                try
-                                {
-                                    File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
-                                    WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
-                                }
-                                catch
-                                {
-                                    WriteOutput("Can not create ida_py3.py", Color.Red);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-
-                    if (Properties.Settings.Default.ida_with_struct)
-                    {
-                        if (File.Exists(guiPath + "ida_with_struct.py"))
-                        {
-                            if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
-                            {
-                                WriteOutput("ida_with_struct.py does not exist", Color.Red);
-                                try
-                                {
-                                    File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
-                                    WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
-                                }
-                                catch
-                                {
-                                    WriteOutput("Can not create ida_with_struct.py", Color.Red);
-                                    return;
-                                }
-                            }
-                        }
-                    }
-
-                    if (Properties.Settings.Default.ida_with_struct_py3)
-                    {
-                        if (File.Exists(guiPath + "ida_with_struct_py3.py"))
-                        {
-                            if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
-                            {
-                                WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
-                                try
-                                {
-                                    File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
-                                    WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
-                                }
-                                catch
-                                {
-                                    WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
-                                    return;
-                                }
-                            }
-                        }
-                    }
+                    CopyScripts();
                 }
             }
             catch (Exception ex)
             {
                 WriteOutput($"{ex.Message}", Color.Red);
+            }
+        }
+
+        private void CopyScripts()
+        {
+            var guiPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            if (Properties.Settings.Default.ghidra)
+            {
+                if (File.Exists(guiPath + "ghidra.py"))
+                {
+                    if (!File.Exists(txtDir.Text + "ghidra.py"))
+                    {
+                        WriteOutput("ghidra.py does not exist", Color.Red);
+                        try
+                        {
+                            File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
+                            WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
+                        }
+                        catch
+                        {
+                            WriteOutput("Can not create ghidra.py", Color.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (Properties.Settings.Default.ghidra_with_struct)
+            {
+                if (File.Exists(guiPath + "ghidra_with_struct.py"))
+                {
+                    if (!File.Exists(txtDir.Text + "ghidra_with_struct.py"))
+                    {
+                        WriteOutput("ghidra_with_struct.py does not exist", Color.Red);
+                        try
+                        {
+                            File.Copy(guiPath + "ghidra_with_struct.py", txtDir.Text + "ghidra_with_struct.py");
+                            WriteOutput($"Create ghidra_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                        }
+                        catch
+                        {
+                            WriteOutput("Can not create ghidra_with_struct.py", Color.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (Properties.Settings.Default.ida)
+            {
+                if (File.Exists(guiPath + "ida.py"))
+                {
+                    if (!File.Exists(txtDir.Text + "ida.py"))
+                    {
+                        WriteOutput("ida.py does not exist", Color.Red);
+                        try
+                        {
+                            File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
+                            WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
+                        }
+                        catch
+                        {
+                            WriteOutput("Can not create ida.py", Color.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (Properties.Settings.Default.ida_py3)
+            {
+                if (File.Exists(guiPath + "ida_py3.py"))
+                {
+                    if (!File.Exists(txtDir.Text + "ida_py3.py"))
+                    {
+                        WriteOutput("ida_py3.py does not exist", Color.Red);
+                        try
+                        {
+                            File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
+                            WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
+                        }
+                        catch
+                        {
+                            WriteOutput("Can not create ida_py3.py", Color.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (Properties.Settings.Default.ida_with_struct)
+            {
+                if (File.Exists(guiPath + "ida_with_struct.py"))
+                {
+                    if (!File.Exists(txtDir.Text + "ida_with_struct.py"))
+                    {
+                        WriteOutput("ida_with_struct.py does not exist", Color.Red);
+                        try
+                        {
+                            File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
+                            WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                        }
+                        catch
+                        {
+                            WriteOutput("Can not create ida_with_struct.py", Color.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+            if (Properties.Settings.Default.ida_with_struct_py3)
+            {
+                if (File.Exists(guiPath + "ida_with_struct_py3.py"))
+                {
+                    if (!File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
+                    {
+                        WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
+                        try
+                        {
+                            File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
+                            WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
+                        }
+                        catch
+                        {
+                            WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
+                            return;
+                        }
+                    }
+                }
             }
         }
 
@@ -602,12 +604,12 @@ namespace Il2CppDumperGui
         {
             if (state == State.Running)
             {
-                btnDump.Text = "Dumping...";
+                btnDump.Text = @"Dumping...";
                 EnableController(this, false);
             }
             else
             {
-                btnDump.Text = "Dump";
+                btnDump.Text = @"Dump";
                 EnableController(this, true);
             }
         }
@@ -661,48 +663,47 @@ namespace Il2CppDumperGui
         {
             await Task.Factory.StartNew(() =>
             {
-                using (var archive = ZipFile.OpenRead(file))
+                using var archive = ZipFile.OpenRead(file);
+                var ipaBinaryFolder = archive.Entries.FirstOrDefault(f => f.FullName.StartsWith("Payload/") && f.FullName.EndsWith(".app/") && f.FullName.Count(x => x == '/') == 2);
+
+                if (ipaBinaryFolder != null)
                 {
-                    var ipaBinaryFolder = archive.Entries.FirstOrDefault(f => f.FullName.StartsWith("Payload/") && f.FullName.EndsWith(".app/") && f.FullName.Count(x => x == '/') == 2);
+                    var myRegex3 = new Regex(@"(?<=Payload\/)(.*?)(?=.app\/)", RegexOptions.None);
+                    var match = myRegex3.Match(ipaBinaryFolder.FullName);
 
-                    if (ipaBinaryFolder != null)
+                    var ipaBinaryName = match.ToString();
+                    var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Data/Managed/Metadata/global-metadata.dat");
+                    var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/{ipaBinaryName}");
+                    if (metadataFile != null)
                     {
-                        var myRegex3 = new Regex(@"(?<=Payload\/)(.*?)(?=.app\/)", RegexOptions.None);
-                        var match = myRegex3.Match(ipaBinaryFolder.FullName);
-
-                        var ipaBinaryName = match.ToString();
-                        var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Data/Managed/Metadata/global-metadata.dat");
-                        var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/{ipaBinaryName}");
-                        if (metadataFile != null)
+                        metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
+                        if (rad64.Checked)
                         {
-                            metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
-                            if (rad64.Checked)
-                            {
-                                WriteOutput("Dumping ARM64...", Color.Chartreuse);
+                            WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
-                                if (Properties.Settings.Default.extBin)
-                                    binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
-                                binaryFile.ExtractToFile(TempPath + "arm64", true);
-                                Dumper(TempPath + "arm64", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
-                            }
-                            else
-                            {
-                                WriteOutput("Dumping ARMv7...", Color.Chartreuse);
-
-                                if (Properties.Settings.Default.extBin)
-                                    binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
-                                binaryFile.ExtractToFile(TempPath + "armv7", true);
-                                Dumper(TempPath + "armv7", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
-                            }
+                            if (Properties.Settings.Default.extBin)
+                                binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
+                            binaryFile.ExtractToFile(TempPath + "arm64", true);
+                            Dumper(TempPath + "arm64", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
                         }
                         else
-                            WriteOutput("This IPA does not contain an IL2CPP application", Color.Yellow);
+                        {
+                            WriteOutput("Dumping ARMv7...", Color.Chartreuse);
+
+                            if (Properties.Settings.Default.extBin)
+                                binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
+                            binaryFile.ExtractToFile(TempPath + "armv7", true);
+                            Dumper(TempPath + "armv7", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
+                        }
                     }
                     else
-                    {
-                        WriteOutput("Failed to extract required file. Please extract the files manually", Color.Yellow);
-                    }
+                        WriteOutput("This IPA does not contain an IL2CPP application", Color.Yellow);
                 }
+                else
+                {
+                    WriteOutput("Failed to extract required file. Please extract the files manually", Color.Yellow);
+                }
+                archive.Dispose();
             });
         }
 
@@ -710,65 +711,64 @@ namespace Il2CppDumperGui
         {
             await Task.Factory.StartNew(() =>
             {
-                using (var archive = ZipFile.OpenRead(file))
+                using var archive = ZipFile.OpenRead(file);
+                var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
+                var metadataPath = archive.Entries.FirstOrDefault(f => f.FullName.Contains("assets/bin/Data/Managed/etc/"));
+                var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
+
+                if (binaryFile == null && metadataPath != null)
                 {
-                    var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
-                    var metadataPath = archive.Entries.FirstOrDefault(f => f.FullName.Contains("assets/bin/Data/Managed/etc/"));
-                    var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
+                    WriteOutput("This APK does not contain lib folder. APK has been splitted", Color.Yellow);
+                    return;
+                }
+                if (binaryFile != null && metadataPath == null)
+                {
+                    WriteOutput("This APK contains il2cpp but does not contain global-metadata.dat. It may be protected or APK has been splitted", Color.Yellow);
+                    return;
+                }
 
-                    if (binaryFile == null && metadataPath != null)
-                    {
-                        WriteOutput("This APK does not contain lib folder. APK has been splitted", Color.Yellow);
-                        return;
-                    }
-                    else if (binaryFile != null && metadataPath == null)
-                    {
-                        WriteOutput("This APK contains il2cpp but does not contain global-metadata.dat. It may be protected or APK has been splitted", Color.Yellow);
-                        return;
-                    }
+                if (metadataFile != null)
+                {
+                    metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
 
-                    if (metadataFile != null)
+                    foreach (var entry in archive.Entries)
                     {
-                        metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
-
-                        foreach (var entry in archive.Entries)
+                        if (entry.FullName.Equals(@"lib/armeabi-v7a/libil2cpp.so"))
                         {
-                            if (entry.FullName.Equals(@"lib/armeabi-v7a/libil2cpp.so"))
-                            {
-                                WriteOutput("Dumping ARMv7...", Color.Chartreuse);
+                            WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
-                                if (Properties.Settings.Default.extBin)
-                                    entry.ExtractToFile(FileDir(outputPath + "\\ARMv7\\libil2cpp.so"), true);
-                                entry.ExtractToFile(TempPath + "libil2cpparmv7", true);
-                                Dumper(TempPath + "libil2cpparmv7", TempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
-                            }
+                            if (Properties.Settings.Default.extBin)
+                                entry.ExtractToFile(FileDir(outputPath + "\\ARMv7\\libil2cpp.so"), true);
+                            entry.ExtractToFile(TempPath + "libil2cpparmv7", true);
+                            Dumper(TempPath + "libil2cpparmv7", TempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
+                        }
 
-                            if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so"))
-                            {
-                                WriteOutput("Dumping ARM64...", Color.Chartreuse);
+                        if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so"))
+                        {
+                            WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
-                                if (Properties.Settings.Default.extBin)
-                                    entry.ExtractToFile(FileDir(outputPath + "\\ARM64\\libil2cpp.so"), true);
-                                entry.ExtractToFile(TempPath + "libil2cpparm64", true);
-                                Dumper(TempPath + "libil2cpparm64", TempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
-                            }
+                            if (Properties.Settings.Default.extBin)
+                                entry.ExtractToFile(FileDir(outputPath + "\\ARM64\\libil2cpp.so"), true);
+                            entry.ExtractToFile(TempPath + "libil2cpparm64", true);
+                            Dumper(TempPath + "libil2cpparm64", TempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
+                        }
 
-                            if (entry.FullName.Equals(@"lib/x86/libil2cpp.so"))
-                            {
-                                WriteOutput("Dumping x86...", Color.Chartreuse);
+                        if (entry.FullName.Equals(@"lib/x86/libil2cpp.so"))
+                        {
+                            WriteOutput("Dumping x86...", Color.Chartreuse);
 
-                                if (Properties.Settings.Default.extBin)
-                                    entry.ExtractToFile(FileDir(outputPath + "\\x86\\libil2cpp.so"), true);
-                                entry.ExtractToFile(TempPath + "libil2cppx86", true);
-                                Dumper(TempPath + "libil2cppx86", TempPath + "global-metadata.dat", FileDir(outputPath + "\\x86\\"));
-                            }
+                            if (Properties.Settings.Default.extBin)
+                                entry.ExtractToFile(FileDir(outputPath + "\\x86\\libil2cpp.so"), true);
+                            entry.ExtractToFile(TempPath + "libil2cppx86", true);
+                            Dumper(TempPath + "libil2cppx86", TempPath + "global-metadata.dat", FileDir(outputPath + "\\x86\\"));
                         }
                     }
-                    else
-                    {
-                        WriteOutput("This APK does not contain an IL2CPP application", Color.Yellow);
-                    }
                 }
+                else
+                {
+                    WriteOutput("This APK does not contain an IL2CPP application", Color.Yellow);
+                }
+                archive.Dispose();
             });
         }
 
@@ -776,29 +776,27 @@ namespace Il2CppDumperGui
         {
             await Task.Factory.StartNew(() =>
             {
-                using (var archive = ZipFile.OpenRead(file))
+                using var archive = ZipFile.OpenRead(file);
+                var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
+                var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
+
+                if (metadataFile != null)
                 {
-                    var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
-                    var metadataPath = archive.Entries.FirstOrDefault(f => f.FullName.Contains("assets/bin/Data/Managed/etc/"));
-                    var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
-
-                    if (metadataFile != null)
-                    {
-                        Debug.WriteLine("Extracted global-metadata.dat to temp");
-                        metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
-                    }
-
-                    if (binaryFile != null)
-                    {
-                        Debug.WriteLine("Extracted libil2cpp.so to temp");
-                        binaryFile.ExtractToFile(TempPath + "libil2cpp.so", true);
-                    }
-
-                    if (File.Exists(TempPath + "libil2cpp.so") && File.Exists(TempPath + "global-metadata.dat"))
-                    {
-                        Dumper(TempPath + "libil2cpp.so", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
-                    }
+                    Debug.WriteLine("Extracted global-metadata.dat to temp");
+                    metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
                 }
+
+                if (binaryFile != null)
+                {
+                    Debug.WriteLine("Extracted libil2cpp.so to temp");
+                    binaryFile.ExtractToFile(TempPath + "libil2cpp.so", true);
+                }
+
+                if (File.Exists(TempPath + "libil2cpp.so") && File.Exists(TempPath + "global-metadata.dat"))
+                {
+                    Dumper(TempPath + "libil2cpp.so", TempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
+                }
+                archive.Dispose();
             });
         }
 
@@ -817,10 +815,7 @@ namespace Il2CppDumperGui
                         var binaryFile = entryBase.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
                         var metadataFile = entryBase.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
 
-                        if (metadataFile != null)
-                        {
-                            metadataFile.ExtractToFile(TempPath + "global-metadata.dat", true);
-                        }
+                        metadataFile?.ExtractToFile(TempPath + "global-metadata.dat", true);
 
                         if (binaryFile != null)
                         {
@@ -863,6 +858,7 @@ namespace Il2CppDumperGui
                         File.Delete(apkFile);
                     }
                 }
+                archive.Dispose();
             });
         }
         #endregion
