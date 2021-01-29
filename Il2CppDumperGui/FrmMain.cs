@@ -146,6 +146,7 @@ namespace Il2CppDumperGui
         {
             try
             {
+                FileDir(outputPath);
                 if (Init(file, metadataPath, out var metadata, out var il2Cpp))
                 {
                     Dump(metadata, il2Cpp, outputPath);
@@ -458,7 +459,7 @@ namespace Il2CppDumperGui
                     outputPath = txtDir.Text + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
                 }
 
-                FileDir(outputPath);
+                
 
                 foreach (var file in files)
                 {
