@@ -418,17 +418,17 @@ namespace Il2CppDumperGui
             var decompiler = new Il2CppDecompiler(executor);
             decompiler.Decompile(_config, outputDir, 1);
             WriteOutput("Done!");
-            if (_config.GenerateScript)
+            if (_config.GenerateStruct)
             {
-                WriteOutput("Generate script...");
-                var scriptGenerator = new ScriptGenerator(executor);
+                WriteOutput("Generate struct...");
+                var scriptGenerator = new StructGenerator(executor);
                 scriptGenerator.WriteScript(outputDir, 1);
                 WriteOutput("Done!");
             }
             if (_config.GenerateDummyDll)
             {
                 WriteOutput("Generate dummy dll...");
-                DummyAssemblyExporter.Export(executor, outputDir);
+                DummyAssemblyExporter.Export(executor, outputDir, _config.DummyDllAddToken);
                 WriteOutput("Done!");
                 Directory.SetCurrentDirectory(realPath); //Fix read-only directory permission
             }
