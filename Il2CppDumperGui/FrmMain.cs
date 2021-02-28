@@ -156,10 +156,7 @@ namespace Il2CppDumperGui
 
             FormState(State.Running);
 
-            await Task.Factory.StartNew(() =>
-            {
-                Dumper(txtFile.Text, txtDat.Text, txtDir.Text);
-            });
+            await Task.Factory.StartNew(() => Dumper(txtFile.Text, txtDat.Text, txtDir.Text)).ConfigureAwait(false);
 
             FormState(State.Idle);
         }
@@ -304,7 +301,6 @@ namespace Il2CppDumperGui
                         catch
                         {
                             WriteOutput("Can not create ida_with_struct_py3.py", Color.Red);
-                            return;
                         }
                     }
                 }
@@ -316,7 +312,7 @@ namespace Il2CppDumperGui
             WriteOutput("Read config...", Color.Black);
             if (File.Exists(realPath + "config.json"))
             {
-                _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Application.StartupPath + Path.DirectorySeparatorChar + @"config.json"));
+                _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Application.StartupPath + Path.DirectorySeparatorChar + "config.json"));
             }
             else
             {
@@ -403,15 +399,12 @@ namespace Il2CppDumperGui
             try
             {
                 var flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length, metadata.imageDefs.Length);
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && !flag && il2Cpp is PE)
                 {
-                    if (!flag && il2Cpp is PE)
-                    {
-                        WriteOutput("Use custom PE loader");
-                        il2Cpp = PELoader.Load(il2CppPath);
-                        il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
-                        flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length, metadata.imageDefs.Length);
-                    }
+                    WriteOutput("Use custom PE loader");
+                    il2Cpp = PELoader.Load(il2CppPath);
+                    il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
+                    flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length, metadata.imageDefs.Length);
                 }
                 if (!flag)
                 {
@@ -509,20 +502,22 @@ namespace Il2CppDumperGui
                         if (files.Length > 1)
                         {
                             WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
-                            await APKSplitDump(file, outputPath);
+                            await APKSplitDump(file, outputPath).ConfigureAwait(false);
                         }
                         else
-                            await APKDump(file, outputPath);
+                        {
+                            await APKDump(file, outputPath).ConfigureAwait(false);
+                        }
                     }
                     else if (ext.Equals(".apks") || ext.Equals(".xapk"))
                     {
                         rbLog.Text = "";
-                        await APKsDump(file, outputPath);
+                        await APKsDump(file, outputPath).ConfigureAwait(false);
                     }
                     else if (ext.Equals(".ipa"))
                     {
                         rbLog.Text = "";
-                        await iOSDump(file, outputPath);
+                        await iOSDump(file, outputPath).ConfigureAwait(false);
                     }
                     else
                     {
@@ -570,7 +565,7 @@ namespace Il2CppDumperGui
             return path;
         }
 
-        private void DeleteFile(string file)
+        private static void DeleteFile(string file)
         {
             if (File.Exists(file))
             {
@@ -639,12 +634,12 @@ namespace Il2CppDumperGui
         {
             if (state == State.Running)
             {
-                btnDump.Text = @"Dumping...";
+                btnDump.Text = "Dumping...";
                 EnableController(this, false);
             }
             else
             {
-                btnDump.Text = @"Dump";
+                btnDump.Text = "Dump";
                 EnableController(this, true);
             }
         }
@@ -775,7 +770,7 @@ namespace Il2CppDumperGui
 
                     foreach (var entry in archive.Entries)
                     {
-                        if (entry.FullName.Equals(@"lib/armeabi-v7a/libil2cpp.so"))
+                        if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so"))
                         {
                             WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
@@ -785,7 +780,7 @@ namespace Il2CppDumperGui
                             Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
                         }
 
-                        if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so"))
+                        if (entry.FullName.Equals("lib/arm64-v8a/libil2cpp.so"))
                         {
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
@@ -795,7 +790,7 @@ namespace Il2CppDumperGui
                             Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
                         }
 
-                        if (entry.FullName.Equals(@"lib/x86/libil2cpp.so"))
+                        if (entry.FullName.Equals("lib/x86/libil2cpp.so"))
                         {
                             WriteOutput("Dumping x86...", Color.Chartreuse);
 
@@ -865,7 +860,7 @@ namespace Il2CppDumperGui
 
                             foreach (var entry in entryBase.Entries)
                             {
-                                if (entry.FullName.Equals(@"lib/armeabi-v7a/libil2cpp.so"))
+                                if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so"))
                                 {
                                     WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
