@@ -1,4 +1,5 @@
 ﻿using Il2CppDumper;
+using Il2CppDumperGui.Properties;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -13,38 +14,64 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-
 // https://github.com/AndnixSH/Il2CppDumper-GUI
 
 namespace Il2CppDumperGui
 {
     public partial class FrmMain : Form
     {
-
         public FrmMain()
         {
             InitializeComponent();
         }
 
         #region Variable
+
         public enum State
         {
             Idle,
             Running
         }
+
         private readonly string realPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string tempPath = Path.GetTempPath() + "\\";
         private static Config _config;
-        #endregion
+
+        #endregion Variable
 
         #region Load/Save
+
         private void FrmMain_Load(object sender, EventArgs e)
         {
             Text += $@" - {Assembly.GetExecutingAssembly().GetName().Version}";
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            LoadLocation();
         }
 
-        #endregion
+        private void LoadLocation()
+        {
+            if (Settings.Default.Location == new Point(0, 0))
+            {
+                CenterToScreen();
+            }
+            else
+            {
+                Location = Settings.Default.Location;
+            }
+        }
+
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CloseLocation();
+        }
+
+        private void CloseLocation()
+        {
+            Settings.Default.Location = Location;
+            Settings.Default.Save();
+        }
+
+        #endregion Load/Save
 
         #region Button EventArgs
 
@@ -56,7 +83,7 @@ namespace Il2CppDumperGui
                 txtCode.Clear();
                 txtMeta.Clear();
 
-                if (Properties.Settings.Default.AutoSetDir)
+                if (Settings.Default.AutoSetDir)
                 {
                     txtDir.Text = Path.GetDirectoryName(txtFile.Text) + @"\dumped\";
                 }
@@ -134,11 +161,10 @@ namespace Il2CppDumperGui
                 Dumper(txtFile.Text, txtDat.Text, txtDir.Text);
             });
 
-
             FormState(State.Idle);
         }
 
-        #endregion
+        #endregion Button EventArgs
 
         #region Dump
 
@@ -316,13 +342,16 @@ namespace Il2CppDumperGui
                     var web = new WebAssembly(il2CppMemory);
                     il2Cpp = web.CreateMemory();
                     break;
+
                 case 0x304F534E:
                     var nso = new NSO(il2CppMemory);
                     il2Cpp = nso.UnCompress();
                     break;
+
                 case 0x905A4D: //PE
                     il2Cpp = new PE(il2CppMemory);
                     break;
+
                 case 0x464c457f: //ELF
                     if (il2CppBytes[4] == 2) //ELF64
                     {
@@ -333,6 +362,7 @@ namespace Il2CppDumperGui
                         il2Cpp = new Elf(il2CppMemory);
                     }
                     break;
+
                 case 0xCAFEBABE: //FAT Mach-O
                 case 0xBEBAFECA:
                     var machofat = new MachoFat(new MemoryStream(il2CppBytes));
@@ -355,6 +385,7 @@ namespace Il2CppDumperGui
                 case 0xFEEDFACF: // 64bit Mach-O
                     il2Cpp = new Macho64(il2CppMemory);
                     break;
+
                 case 0xFEEDFACE: // 32bit Mach-O
                     il2Cpp = new Macho(il2CppMemory);
                     break;
@@ -367,7 +398,6 @@ namespace Il2CppDumperGui
                 WriteOutput("Input global-metadata.dat dump address:");
                 metadata.Address = Convert.ToUInt64(Console.ReadLine(), 16);
             }
-
 
             WriteOutput("Searching...");
             try
@@ -434,9 +464,10 @@ namespace Il2CppDumperGui
             }
         }
 
-        #endregion
+        #endregion Dump
 
         #region Drag/Drop
+
         private async void FrmMain_DragDropAsync(object sender, DragEventArgs e)
         {
             try
@@ -461,12 +492,10 @@ namespace Il2CppDumperGui
                     outputPath = txtDir.Text + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
                 }
 
-                
-
                 foreach (var file in files)
                 {
                     var ext = Path.GetExtension(file);
-                    if(ext.Equals(".so"))
+                    if (ext.Equals(".so"))
                     {
                         txtFile.Text = file;
                     }
@@ -506,7 +535,6 @@ namespace Il2CppDumperGui
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 WriteOutput($"{ex.Message}", Color.Red);
@@ -551,22 +579,25 @@ namespace Il2CppDumperGui
             }
         }
 
-        #endregion
+        #endregion Drag/Drop
 
         #region Copy to clipboard
+
         private void menuCopy_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(rbLog.SelectedText);
         }
+
         private void rbLog_TextChanged(object sender, EventArgs e)
         {
             rbLog.SelectionStart = rbLog.Text.Length;
             rbLog.ScrollToCaret();
         }
 
-        #endregion
+        #endregion Copy to clipboard
 
         #region Logging
+
         public static void AppendText(RichTextBox box, string text, Color color)
         {
             box.SelectionStart = box.TextLength;
@@ -576,6 +607,7 @@ namespace Il2CppDumperGui
             box.SelectionColor = box.ForeColor;
             box.ScrollToCaret();
         }
+
         private void TextToLogs(string str, Color color)
         {
             Invoke(new MethodInvoker(delegate
@@ -583,6 +615,7 @@ namespace Il2CppDumperGui
                 AppendText(rbLog, str, color);
             }));
         }
+
         public void WriteOutput(string str, Color color)
         {
             Invoke(new MethodInvoker(delegate
@@ -590,6 +623,7 @@ namespace Il2CppDumperGui
                 TextToLogs(str + Environment.NewLine, color);
             }));
         }
+
         public void WriteOutput(string str)
         {
             Invoke(new MethodInvoker(delegate
@@ -597,9 +631,11 @@ namespace Il2CppDumperGui
                 TextToLogs(str + Environment.NewLine, Color.Black);
             }));
         }
-        #endregion
+
+        #endregion Logging
 
         #region Form Controller
+
         private void FormState(State state)
         {
             if (state == State.Running)
@@ -613,6 +649,7 @@ namespace Il2CppDumperGui
                 EnableController(this, true);
             }
         }
+
         private void EnableController(Form form, bool value)
         {
             foreach (var obj in form.Controls)
@@ -634,6 +671,7 @@ namespace Il2CppDumperGui
                 }
             }
         }
+
         private void EnableController(Control control, bool value)
         {
             foreach (var obj in control.Controls)
@@ -656,10 +694,11 @@ namespace Il2CppDumperGui
             }
         }
 
-        #endregion
+        #endregion Form Controller
 
         #region Auto Dump
-        async Task iOSDump(string file, string outputPath)
+
+        private async Task iOSDump(string file, string outputPath)
         {
             await Task.Factory.StartNew(() =>
             {
@@ -707,7 +746,7 @@ namespace Il2CppDumperGui
             });
         }
 
-        async Task APKDump(string file, string outputPath)
+        private async Task APKDump(string file, string outputPath)
         {
             await Task.Factory.StartNew(() =>
             {
@@ -772,7 +811,7 @@ namespace Il2CppDumperGui
             });
         }
 
-        async Task APKSplitDump(string file, string outputPath)
+        private async Task APKSplitDump(string file, string outputPath)
         {
             await Task.Factory.StartNew(() =>
             {
@@ -800,7 +839,7 @@ namespace Il2CppDumperGui
             });
         }
 
-        async Task APKsDump(string file, string outputPath)
+        private async Task APKsDump(string file, string outputPath)
         {
             await Task.Factory.StartNew(() =>
             {
@@ -819,7 +858,7 @@ namespace Il2CppDumperGui
 
                         if (binaryFile != null)
                         {
-                           binaryFile.ExtractToFile(tempPath + "libil2cpp.so", true);
+                            binaryFile.ExtractToFile(tempPath + "libil2cpp.so", true);
 
                             foreach (var entry in entryBase.Entries)
                             {
@@ -861,6 +900,7 @@ namespace Il2CppDumperGui
                 archive.Dispose();
             });
         }
-        #endregion
+
+        #endregion Auto Dump
     }
 }

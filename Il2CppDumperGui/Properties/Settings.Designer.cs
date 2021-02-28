@@ -121,13 +121,13 @@ namespace Il2CppDumperGui.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Setting {
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point Location {
             get {
-                return ((string)(this["Setting"]));
+                return ((global::System.Drawing.Point)(this["Location"]));
             }
             set {
-                this["Setting"] = value;
+                this["Location"] = value;
             }
         }
     }
