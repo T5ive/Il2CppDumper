@@ -6,6 +6,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>T5 - 32.ico</ApplicationIcon>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
+    <RepositoryUrl></RepositoryUrl>
+    <PackageProjectUrl>https://github.com/T5ive/Il2CppDumper-GUI</PackageProjectUrl>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>

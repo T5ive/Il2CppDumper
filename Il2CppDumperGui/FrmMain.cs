@@ -487,41 +487,41 @@ namespace Il2CppDumperGui
 
                 foreach (var file in files)
                 {
-                    var ext = Path.GetExtension(file);
-                    if (ext.Equals(".so"))
+                    switch (Path.GetExtension(file))
                     {
-                        txtFile.Text = file;
-                    }
-                    if (ext.Equals(".dat"))
-                    {
-                        txtDat.Text = file;
-                    }
-                    else if (ext.Equals(".apk"))
-                    {
-                        rbLog.Text = "";
-                        if (files.Length > 1)
+                        case ".so":
+                            txtFile.Text = file;
+                            break;
+                        case ".dat":
+                            txtDat.Text = file;
+                            break;
+                        case ".apk":
                         {
-                            WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
-                            await APKSplitDump(file, outputPath).ConfigureAwait(false);
+                            rbLog.Text = "";
+                            if (files.Length > 1)
+                            {
+                                WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
+                                await APKSplitDump(file, outputPath).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await APKDump(file, outputPath).ConfigureAwait(false);
+                            }
+
+                            break;
                         }
-                        else
-                        {
-                            await APKDump(file, outputPath).ConfigureAwait(false);
-                        }
-                    }
-                    else if (ext.Equals(".apks") || ext.Equals(".xapk"))
-                    {
-                        rbLog.Text = "";
-                        await APKsDump(file, outputPath).ConfigureAwait(false);
-                    }
-                    else if (ext.Equals(".ipa"))
-                    {
-                        rbLog.Text = "";
-                        await iOSDump(file, outputPath).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        txtFile.Text = file;
+                        case ".apks":
+                        case ".xapk":
+                            rbLog.Text = "";
+                            await APKsDump(file, outputPath).ConfigureAwait(false);
+                            break;
+                        case ".ipa":
+                            rbLog.Text = "";
+                            await iOSDump(file, outputPath).ConfigureAwait(false);
+                            break;
+                        default:
+                            txtFile.Text = file;
+                            break;
                     }
 
                     if (Settings.Default.AutoSetDir)
@@ -556,7 +556,7 @@ namespace Il2CppDumperGui
             }
         }
 
-        private string FileDir(string path)
+        private static string FileDir(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
@@ -632,16 +632,24 @@ namespace Il2CppDumperGui
 
         private void FormState(State state)
         {
-            if (state == State.Running)
+            try
             {
-                btnDump.Text = "Dumping...";
-                EnableController(this, false);
+                if (state == State.Running)
+                {
+                    btnDump.Text = "Dumping...";
+                    EnableController(this, false);
+                }
+                else
+                {
+                    btnDump.Text = "Dump";
+                    EnableController(this, true);
+                }
             }
-            else
+            catch (Exception e)
             {
-                btnDump.Text = "Dump";
-                EnableController(this, true);
+               WriteOutput("Error: " + e.Message,Color.Red);
             }
+            
         }
 
         private void EnableController(Form form, bool value)
