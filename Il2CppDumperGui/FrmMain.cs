@@ -189,7 +189,7 @@ namespace Il2CppDumperGui
         {
             var guiPath = AppDomain.CurrentDomain.BaseDirectory;
 
-            if (Properties.Settings.Default.ghidra)
+            if (Settings.Default.ghidra)
             {
                 if (File.Exists(guiPath + "ghidra.py"))
                 {
@@ -209,7 +209,7 @@ namespace Il2CppDumperGui
                     }
                 }
             }
-            if (Properties.Settings.Default.ghidra_with_struct)
+            if (Settings.Default.ghidra_with_struct)
             {
                 if (File.Exists(guiPath + "ghidra_with_struct.py"))
                 {
@@ -229,7 +229,7 @@ namespace Il2CppDumperGui
                     }
                 }
             }
-            if (Properties.Settings.Default.ida)
+            if (Settings.Default.ida)
             {
                 if (File.Exists(guiPath + "ida.py"))
                 {
@@ -249,7 +249,7 @@ namespace Il2CppDumperGui
                     }
                 }
             }
-            if (Properties.Settings.Default.ida_py3)
+            if (Settings.Default.ida_py3)
             {
                 if (File.Exists(guiPath + "ida_py3.py"))
                 {
@@ -269,7 +269,7 @@ namespace Il2CppDumperGui
                     }
                 }
             }
-            if (Properties.Settings.Default.ida_with_struct)
+            if (Settings.Default.ida_with_struct)
             {
                 if (File.Exists(guiPath + "ida_with_struct.py"))
                 {
@@ -289,7 +289,7 @@ namespace Il2CppDumperGui
                     }
                 }
             }
-            if (Properties.Settings.Default.ida_with_struct_py3)
+            if (Settings.Default.ida_with_struct_py3)
             {
                 if (File.Exists(guiPath + "ida_with_struct_py3.py"))
                 {
@@ -483,7 +483,7 @@ namespace Il2CppDumperGui
                     DeleteFile(tempPath + "libil2cpp.so");
                 }
                 var outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
-                if (Properties.Settings.Default.AutoSetDir)
+                if (Settings.Default.AutoSetDir)
                 {
                     txtDir.Text = outputPath;
                 }
@@ -529,7 +529,7 @@ namespace Il2CppDumperGui
                         txtFile.Text = file;
                     }
 
-                    if (Properties.Settings.Default.AutoSetDir)
+                    if (Settings.Default.AutoSetDir)
                     {
                         txtDir.Text = Path.GetDirectoryName(file) + @"\dumped\";
                     }
@@ -555,8 +555,7 @@ namespace Il2CppDumperGui
 
         private void FrmMain_DragOver(object sender, DragEventArgs e)
         {
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var file in files)
+            foreach (var file in (string[])e.Data.GetData(DataFormats.FileDrop))
             {
                 Path.GetExtension(file);
             }
@@ -655,19 +654,20 @@ namespace Il2CppDumperGui
             foreach (var obj in form.Controls)
             {
                 var control = (Control)obj;
-                if (control.GetType().Name == "Button" ||
-                    control.GetType().Name == "TextBox" ||
-                    control.GetType().Name == "RadioButton" ||
-                    control.GetType().Name == "RichTextBox")
+                switch (control.GetType().Name)
                 {
-                    control.Enabled = value;
-                }
-                if (control.GetType().Name == "GroupBox" ||
-                    control.GetType().Name == "Panel" ||
-                    control.GetType().Name == "TableLayoutPanel" ||
-                    control.GetType().Name == "TabPage")
-                {
-                    EnableController(control, value);
+                    case "Button":
+                    case "TextBox":
+                    case "RadioButton":
+                    case "RichTextBox":
+                        control.Enabled = value;
+                        break;
+                    case "GroupBox":
+                    case "Panel":
+                    case "TableLayoutPanel":
+                    case "TabPage":
+                        EnableController(control, value);
+                        break;
                 }
             }
         }
@@ -677,19 +677,20 @@ namespace Il2CppDumperGui
             foreach (var obj in control.Controls)
             {
                 var control2 = (Control)obj;
-                if (control2.GetType().Name == "Button" ||
-                    control2.GetType().Name == "TextBox" ||
-                    control2.GetType().Name == "RadioButton" ||
-                    control2.GetType().Name == "RichTextBox")
+                switch (control2.GetType().Name)
                 {
-                    control2.Enabled = value;
-                }
-                if (control2.GetType().Name == "GroupBox" ||
-                    control2.GetType().Name == "Panel" ||
-                    control2.GetType().Name == "TableLayoutPanel" ||
-                    control2.GetType().Name == "TabPage")
-                {
-                    EnableController(control, value);
+                    case "Button":
+                    case "TextBox":
+                    case "RadioButton":
+                    case "RichTextBox":
+                        control2.Enabled = value;
+                        break;
+                    case "GroupBox":
+                    case "Panel":
+                    case "TableLayoutPanel":
+                    case "TabPage":
+                        EnableController(control, value);
+                        break;
                 }
             }
         }
@@ -720,7 +721,7 @@ namespace Il2CppDumperGui
                         {
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
-                            if (Properties.Settings.Default.extBin)
+                            if (Settings.Default.extBin)
                                 binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
                             binaryFile.ExtractToFile(tempPath + "arm64", true);
                             Dumper(tempPath + "arm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
@@ -729,21 +730,23 @@ namespace Il2CppDumperGui
                         {
                             WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
-                            if (Properties.Settings.Default.extBin)
+                            if (Settings.Default.extBin)
                                 binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
                             binaryFile.ExtractToFile(tempPath + "armv7", true);
                             Dumper(tempPath + "armv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
                         }
                     }
                     else
+                    {
                         WriteOutput("This IPA does not contain an IL2CPP application", Color.Yellow);
+                    }
                 }
                 else
                 {
                     WriteOutput("Failed to extract required file. Please extract the files manually", Color.Yellow);
                 }
                 archive.Dispose();
-            });
+            }).ConfigureAwait(false);
         }
 
         private async Task APKDump(string file, string outputPath)
@@ -776,7 +779,7 @@ namespace Il2CppDumperGui
                         {
                             WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
-                            if (Properties.Settings.Default.extBin)
+                            if (Settings.Default.extBin)
                                 entry.ExtractToFile(FileDir(outputPath + "\\ARMv7\\libil2cpp.so"), true);
                             entry.ExtractToFile(tempPath + "libil2cpparmv7", true);
                             Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
@@ -786,7 +789,7 @@ namespace Il2CppDumperGui
                         {
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
-                            if (Properties.Settings.Default.extBin)
+                            if (Settings.Default.extBin)
                                 entry.ExtractToFile(FileDir(outputPath + "\\ARM64\\libil2cpp.so"), true);
                             entry.ExtractToFile(tempPath + "libil2cpparm64", true);
                             Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
@@ -796,7 +799,7 @@ namespace Il2CppDumperGui
                         {
                             WriteOutput("Dumping x86...", Color.Chartreuse);
 
-                            if (Properties.Settings.Default.extBin)
+                            if (Settings.Default.extBin)
                                 entry.ExtractToFile(FileDir(outputPath + "\\x86\\libil2cpp.so"), true);
                             entry.ExtractToFile(tempPath + "libil2cppx86", true);
                             Dumper(tempPath + "libil2cppx86", tempPath + "global-metadata.dat", FileDir(outputPath + "\\x86\\"));
@@ -808,7 +811,7 @@ namespace Il2CppDumperGui
                     WriteOutput("This APK does not contain an IL2CPP application", Color.Yellow);
                 }
                 archive.Dispose();
-            });
+            }).ConfigureAwait(false);
         }
 
         private async Task APKSplitDump(string file, string outputPath)
@@ -836,7 +839,7 @@ namespace Il2CppDumperGui
                     Dumper(tempPath + "libil2cpp.so", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
                 }
                 archive.Dispose();
-            });
+            }).ConfigureAwait(false);
         }
 
         private async Task APKsDump(string file, string outputPath)
@@ -866,7 +869,7 @@ namespace Il2CppDumperGui
                                 {
                                     WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
-                                    if (Properties.Settings.Default.extBin)
+                                    if (Settings.Default.extBin)
                                         entry.ExtractToFile(FileDir(outputPath + "\\ARMv7\\libil2cpp.so"), true);
                                     entry.ExtractToFile(tempPath + "libil2cpparmv7", true);
                                     Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
@@ -876,7 +879,7 @@ namespace Il2CppDumperGui
                                 {
                                     WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
-                                    if (Properties.Settings.Default.extBin)
+                                    if (Settings.Default.extBin)
                                         entry.ExtractToFile(FileDir(outputPath + "\\ARM64\\libil2cpp.so"), true);
                                     entry.ExtractToFile(tempPath + "libil2cpparm64", true);
                                     Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
@@ -886,7 +889,7 @@ namespace Il2CppDumperGui
                                 {
                                     WriteOutput("Dumping x86...", Color.Chartreuse);
 
-                                    if (Properties.Settings.Default.extBin)
+                                    if (Settings.Default.extBin)
                                         entry.ExtractToFile(FileDir(outputPath + "\\x86\\libil2cpp.so"), true);
                                     entry.ExtractToFile(tempPath + "libil2cppx86", true);
                                     Dumper(tempPath + "libil2cppx86", tempPath + "global-metadata.dat", FileDir(outputPath + "\\x86\\"));
@@ -898,7 +901,7 @@ namespace Il2CppDumperGui
                     }
                 }
                 archive.Dispose();
-            });
+            }).ConfigureAwait(false);
         }
 
         #endregion Auto Dump
