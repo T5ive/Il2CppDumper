@@ -91,15 +91,7 @@ namespace Il2CppDumper
                 return;
             }
             if (metadataPath == null)
-            {
-                if (Init(il2cppPath, metadataPath, out var metadata, out var il2Cpp))
-                {
-                    Console.Write("Press Name: ");
-                    NameDump = Console.ReadLine()+"/";
-                    if (string.IsNullOrWhiteSpace(NameDump)) NameDump = "Dump/";
-                    Directory.CreateDirectory(NameDump);
-                    Dump(metadata, il2Cpp, outputDir);
-                }
+            {                
                 Console.WriteLine($"ERROR: Metadata file not found or encrypted.");
             }
             else
@@ -108,6 +100,10 @@ namespace Il2CppDumper
                 {
                     if (Init(il2cppPath, metadataPath, out var metadata, out var il2Cpp))
                     {
+                        Console.Write("Press Name: ");
+                        NameDump = Console.ReadLine()+"/";
+                        if (string.IsNullOrWhiteSpace(NameDump)) NameDump = "Dump/";
+                        Directory.CreateDirectory(NameDump);
                         Dump(metadata, il2Cpp, outputDir);
                     }
                 }
