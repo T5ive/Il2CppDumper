@@ -23,14 +23,14 @@ namespace Il2CppDumper
         private static readonly string ARMFeatureBytes = "? 0x10 ? 0xE7 ? 0x00 ? 0xE0 ? 0x20 ? 0xE0";
         private static readonly string X86FeatureBytes = "? 0x10 ? 0xE7 ? 0x00 ? 0xE0 ? 0x20 ? 0xE0"; //TODO
 
-        public Elf(Stream stream) : base(stream)
+        public Elf(Stream stream, string dumpAddress = "") : base(stream)
         {
             Is32Bit = true;
             elfHeader = ReadClass<Elf32_Ehdr>();
             programSegment = ReadClassArray<Elf32_Phdr>(elfHeader.e_phoff, elfHeader.e_phnum);
             if (!CheckSection())
             {
-                GetDumpAddress();
+                GetDumpAddress(dumpAddress);
             }
             if (IsDumped)
             {

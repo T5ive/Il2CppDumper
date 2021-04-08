@@ -351,11 +351,23 @@ namespace Il2CppDumperGui
                 case 0x464c457f: //ELF
                     if (il2CppBytes[4] == 2) //ELF64
                     {
-                        il2Cpp = new Elf64(il2CppMemory);
+                        var addressValue = "";
+                        il2Cpp =
+                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "", ref addressValue) !=
+                            DialogResult.OK
+                                ? string.IsNullOrWhiteSpace(addressValue) ? new Elf64(il2CppMemory) :
+                                new Elf64(il2CppMemory, addressValue)
+                                : new Elf64(il2CppMemory);
                     }
                     else
                     {
-                        il2Cpp = new Elf(il2CppMemory);
+                        var addressValue = "";
+                        il2Cpp =
+                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "", ref addressValue) !=
+                            DialogResult.OK
+                                ? string.IsNullOrWhiteSpace(addressValue) ? new Elf(il2CppMemory) :
+                                new Elf(il2CppMemory, addressValue)
+                                : new Elf(il2CppMemory);
                     }
                     break;
 
@@ -391,8 +403,10 @@ namespace Il2CppDumperGui
             WriteOutput($"Il2Cpp Version: {il2Cpp.Version}");
             if (il2Cpp.Version >= 27 && il2Cpp is ElfBase elf && elf.IsDumped)
             {
-                WriteOutput("Input global-metadata.dat dump address:");
-                metadata.Address = Convert.ToUInt64(Console.ReadLine(), 16);
+                var metadataValue = "";
+                if (InputBox.Show("Input global-metadata.dat dump address:", "", ref metadataValue) != DialogResult.OK) return false;
+                metadata.Address = Convert.ToUInt64(metadataValue, 16);
+                WriteOutput($"global-metadata.dat dump address: {metadataValue}");
             }
 
             WriteOutput("Searching...");
@@ -418,11 +432,20 @@ namespace Il2CppDumperGui
                 {
                     WriteOutput("ERROR: Can't use auto mode to process file, try manual mode.");
                     WriteOutput("Input CodeRegistration: ");
-                    var codeRegistration = Convert.ToUInt64(Console.ReadLine(), 16);
-                    WriteOutput("Input MetadataRegistration: ");
-                    var metadataRegistration = Convert.ToUInt64(Console.ReadLine(), 16);
+                    
+                    var codeValue = "";
+                    if (InputBox.Show(@"Input CodeRegistration: ", "", ref codeValue) != DialogResult.OK) return false;
+                    var codeRegistration = Convert.ToUInt64(codeValue, 16);
+                    WriteOutput($"CodeRegistration: {codeValue}");
+
+                    var metadataValue = "";
+                    if (InputBox.Show("Input MetadataRegistration: ", "", ref metadataValue) != DialogResult.OK) return false;
+                    var metadataRegistration = Convert.ToUInt64(metadataValue, 16);
+                    WriteOutput($"MetadataRegistration: {metadataValue}");
+
                     il2Cpp.Init(codeRegistration, metadataRegistration);
                     return true;
+
                 }
             }
             catch (Exception e)
