@@ -352,22 +352,40 @@ namespace Il2CppDumperGui
                     if (il2CppBytes[4] == 2) //ELF64
                     {
                         var addressValue = "";
-                        il2Cpp =
-                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "", ref addressValue) !=
-                            DialogResult.OK
-                                ? string.IsNullOrWhiteSpace(addressValue) ? new Elf64(il2CppMemory) :
-                                new Elf64(il2CppMemory, addressValue)
-                                : new Elf64(il2CppMemory);
+                        var elf64 = new Elf64(il2CppMemory);
+                        if (!elf64.CheckSection())
+                        {
+                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "",
+                                ref addressValue);
+                            il2Cpp =  new Elf64(il2CppMemory, addressValue);
+                        }
+                        else
+                        {
+                            il2Cpp = new Elf64(il2CppMemory);
+                        }
+                        //if (InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "",
+                        //        ref addressValue) !=
+                        //    DialogResult.OK)
+                        //    il2Cpp = string.IsNullOrWhiteSpace(addressValue)
+                        //        ? new Elf64(il2CppMemory)
+                        //        : new Elf64(il2CppMemory, addressValue);
+                        //else
+                        //    il2Cpp = new Elf64(il2CppMemory);
                     }
                     else
                     {
                         var addressValue = "";
-                        il2Cpp =
-                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "", ref addressValue) !=
-                            DialogResult.OK
-                                ? string.IsNullOrWhiteSpace(addressValue) ? new Elf(il2CppMemory) :
-                                new Elf(il2CppMemory, addressValue)
-                                : new Elf(il2CppMemory);
+                        var elf86 = new Elf(il2CppMemory);
+                        if (!elf86.CheckSection())
+                        {
+                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "",
+                                ref addressValue);
+                            il2Cpp = new Elf(il2CppMemory, addressValue);
+                        }
+                        else
+                        {
+                            il2Cpp = new Elf(il2CppMemory);
+                        }
                     }
                     break;
 
@@ -479,6 +497,7 @@ namespace Il2CppDumperGui
                 Directory.SetCurrentDirectory(realPath); //Fix read-only directory permission
             }
         }
+
 
         #endregion Dump
 
