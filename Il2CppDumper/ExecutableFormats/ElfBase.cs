@@ -10,11 +10,11 @@ namespace Il2CppDumper
 
         protected ElfBase(Stream stream) : base(stream) { }
 
-        public void GetDumpAddress(string dumpAddress = "")
+        public void GetDumpAddress()
         {
             Console.WriteLine("Detected this may be a dump file.");
             Console.WriteLine("Input il2cpp dump address or input 0 to force continue:");
-            DumpAddr = Convert.ToUInt64(dumpAddress, 16);
+            DumpAddr = Convert.ToUInt64(Console.ReadLine(), 16);
             if (DumpAddr != 0)
             {
                 IsDumped = true;

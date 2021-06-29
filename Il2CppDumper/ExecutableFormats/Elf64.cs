@@ -15,13 +15,13 @@ namespace Il2CppDumper
         private Elf64_Shdr[] sectionTable;
         private Elf64_Phdr pt_dynamic;
 
-        public Elf64(Stream stream, string dumpAddress = "") : base(stream)
+        public Elf64(Stream stream) : base(stream)
         {
             elfHeader = ReadClass<Elf64_Ehdr>();
             programSegment = ReadClassArray<Elf64_Phdr>(elfHeader.e_phoff, elfHeader.e_phnum);
             if (!CheckSection())
             {
-                GetDumpAddress(dumpAddress);
+                GetDumpAddress();
             }
             if (IsDumped)
             {
