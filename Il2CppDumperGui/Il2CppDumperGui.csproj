@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>5.0</TargetFramework>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>T5 - 32.ico</ApplicationIcon>
     <Version>1.1.0</Version>
@@ -12,6 +11,7 @@
     <RepositoryUrl></RepositoryUrl>
     <PackageProjectUrl>https://github.com/T5ive/Il2CppDumper-GUI</PackageProjectUrl>
     <PackageIcon></PackageIcon>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
