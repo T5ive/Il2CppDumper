@@ -21,12 +21,9 @@ namespace Il2CppDumper
             il2Cpp = il2CppExecutor.il2Cpp;
         }
 
-        public void Decompile(Config config, string outputDir, int dumpType = 0)
+        public void Decompile(Config config, string outputDir)
         {
-            var writer = dumpType == 1
-                ? new StreamWriter(new FileStream(outputDir + "dump.cs", FileMode.Create),
-                    new UTF8Encoding(false))
-                : new StreamWriter(new FileStream(Program.NameDump + "dump.cs", FileMode.Create),
+            var writer = new StreamWriter(new FileStream(outputDir + "dump.cs", FileMode.Create),
                     new UTF8Encoding(false));
 
             //dump image

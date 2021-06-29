@@ -9,7 +9,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <Copyright>Copyright © Perfare 2016-2020</Copyright>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <ApplicationIcon />
+    <ApplicationIcon>T5 - 32.ico</ApplicationIcon>
     <StartupObject></StartupObject>
   </PropertyGroup>
 

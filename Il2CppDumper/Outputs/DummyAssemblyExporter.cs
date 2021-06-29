@@ -12,10 +12,10 @@ namespace Il2CppDumper
         public static void Export(Il2CppExecutor il2CppExecutor, string outputDir, bool addToken)
         {
             Directory.SetCurrentDirectory(outputDir);
-            if (Directory.Exists(Program.NameDump + "DummyDll"))
-                Directory.Delete(Program.NameDump + "DummyDll", true);
-            Directory.CreateDirectory(Program.NameDump + "DummyDll");
-            Directory.SetCurrentDirectory(Program.NameDump + "DummyDll");
+            if (Directory.Exists("DummyDll"))
+                Directory.Delete("DummyDll", true);
+            Directory.CreateDirectory("DummyDll");
+            Directory.SetCurrentDirectory("DummyDll");
             var dummy = new DummyAssemblyGenerator(il2CppExecutor, addToken);
             foreach (var assembly in dummy.Assemblies)
             {

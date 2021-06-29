@@ -37,12 +37,8 @@ namespace Il2CppDumper
             il2Cpp = il2CppExecutor.il2Cpp;
         }
 
-        public void WriteScript(string outputDir, int dumpType = 0)
+        public void WriteScript(string outputDir)
         {
-            if (dumpType == 0)
-            {
-                outputDir = Program.NameDump;
-            }
             var json = new ScriptJson();
             // 生成唯一名称
             for (var imageIndex = 0; imageIndex < metadata.imageDefs.Length; imageIndex++)

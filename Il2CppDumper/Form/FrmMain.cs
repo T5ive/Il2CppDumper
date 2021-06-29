@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Il2CppDumper.Properties;
+using Il2CppDumperGui;
 
 // https://github.com/AndnixSH/Il2CppDumper-GUI
 
@@ -22,6 +24,7 @@ namespace Il2CppDumper
         public FrmMain()
         {
             InitializeComponent();
+            _FrmMain = this;
         }
 
         #region Variable
@@ -31,6 +34,8 @@ namespace Il2CppDumper
             Idle,
             Running
         }
+
+        public static FrmMain _FrmMain;
 
         private readonly string realPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string tempPath = Path.GetTempPath() + "\\";
@@ -350,44 +355,13 @@ namespace Il2CppDumper
                 case 0x464c457f: //ELF
                     if (il2CppBytes[4] == 2) //ELF64
                     {
-                        var addressValue = "";
-                        var elf64 = new Elf64(il2CppMemory);
-                        if (!elf64.CheckSection())
-                        {
-                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "",
-                                ref addressValue);
-                            il2Cpp =  new Elf64(il2CppMemory, addressValue);
-                        }
-                        else
-                        {
-                            il2Cpp = new Elf64(il2CppMemory);
-                        }
-                        //if (InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "",
-                        //        ref addressValue) !=
-                        //    DialogResult.OK)
-                        //    il2Cpp = string.IsNullOrWhiteSpace(addressValue)
-                        //        ? new Elf64(il2CppMemory)
-                        //        : new Elf64(il2CppMemory, addressValue);
-                        //else
-                        //    il2Cpp = new Elf64(il2CppMemory);
+                        il2Cpp = new Elf64(il2CppMemory);
                     }
                     else
                     {
-                        var addressValue = "";
-                        var elf86 = new Elf(il2CppMemory);
-                        if (!elf86.CheckSection())
-                        {
-                            InputBox.Show("Input il2cpp dump address or leave empty to force continue:", "",
-                                ref addressValue);
-                            il2Cpp = new Elf(il2CppMemory, addressValue);
-                        }
-                        else
-                        {
-                            il2Cpp = new Elf(il2CppMemory);
-                        }
+                        il2Cpp = new Elf(il2CppMemory);
                     }
                     break;
-
                 case 0xCAFEBABE: //FAT Mach-O
                 case 0xBEBAFECA:
                     var machofat = new MachoFat(new MemoryStream(il2CppBytes));
@@ -479,13 +453,13 @@ namespace Il2CppDumper
             WriteOutput("Dumping...");
             var executor = new Il2CppExecutor(metadata, il2Cpp);
             var decompiler = new Il2CppDecompiler(executor);
-            decompiler.Decompile(_config, outputDir, 1);
+            decompiler.Decompile(_config, outputDir);
             WriteOutput("Done!");
             if (_config.GenerateStruct)
             {
                 WriteOutput("Generate struct...");
                 var scriptGenerator = new StructGenerator(executor);
-                scriptGenerator.WriteScript(outputDir, 1);
+                scriptGenerator.WriteScript(outputDir);
                 WriteOutput("Done!");
             }
             if (_config.GenerateDummyDll)
