@@ -1,6 +1,6 @@
 # Il2CppDumper
 
-[![Build status](https://ci.appveyor.com/api/projects/status/anhqw33vcpmp8ofa?svg=true)](https://ci.appveyor.com/project/Perfare/il2cppdumper/branch/master/artifacts)
+![](https://i.imgur.com/zBnIrDb.png)
 
 Unity il2cpp逆向工程
 
@@ -18,13 +18,12 @@ Unity il2cpp逆向工程
 
 直接运行Il2CppDumper.exe并依次选择il2cpp的可执行文件和global-metadata.dat文件，然后根据提示输入相应信息。
 
+直接运行Il2CppDumper.exe并将apk，apks或xapk文件拖到表单中
+
+将 apk，apks或xapk文件拖到Il2CppDumper.exe
+
 程序运行完成后将在当前运行目录下生成输出文件
 
-### 命令行
-
-```
-Il2CppDumper.exe <executable-file> <global-metadata> <output-directory>
-```
 
 ### 输出文件
 
@@ -94,3 +93,4 @@ Il2CppDumper检测到可执行文件已被保护，使用`GameGuardian`从游戏
 ## 感谢
 
 - Jumboperson - [Il2CppDumper](https://github.com/Jumboperson/Il2CppDumper)
+- AndnixSH - [Il2CppDumper-GUI](https://github.com/AndnixSH/Il2CppDumper-GUI)

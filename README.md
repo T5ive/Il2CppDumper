@@ -2,9 +2,6 @@
 
 ![](https://i.imgur.com/zBnIrDb.png)
 
-
-[![Build status](https://ci.appveyor.com/api/projects/status/anhqw33vcpmp8ofa?svg=true)](https://ci.appveyor.com/project/Perfare/il2cppdumper/branch/master/artifacts)
-
 中文说明请戳[这里](README.zh-CN.md)
 
 Unity il2cpp reverse engineer
@@ -21,15 +18,14 @@ Unity il2cpp reverse engineer
 
 ## Usage
 
-Run `Il2CppDumper.exe` and choose the il2cpp executable file and `global-metadata.dat` file, then enter the information as prompted
+- Run `Il2CppDumper.exe` and choose the il2cpp executable file and `global-metadata.dat` file, then enter the information as prompted or press `Dump`
+
+- Run `Il2CppDumper.exe` and drag the `apk`, `apks` or `xapk` file to the form
+
+- Drag the `apk`, `apks` or `xapk` file to the `Il2CppDumper.exe`
 
 The program will then generate all the output files in current working directory
 
-### Command-line
-
-```
-Il2CppDumper.exe <executable-file> <global-metadata> <output-directory>
-```
 
 ### Outputs
 
