@@ -17,4 +17,4 @@ jobs:
         uses: microsoft/setup-msbuild@v1
         
       - name: Build the Solution
-        run: msbuild Tools-Injector-Mod-Menu.sln
+        run: msbuild Il2CppDumper.sln
