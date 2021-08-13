@@ -9,12 +9,12 @@ namespace Il2CppDumper
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            Application.Run(args.Length > 0 ? new FrmMain(args) : new FrmMain());
         }
     }
 }

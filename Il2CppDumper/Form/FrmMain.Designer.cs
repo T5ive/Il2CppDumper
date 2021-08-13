@@ -36,9 +36,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.txtFile = new System.Windows.Forms.TextBox();
+            this.txtSoFile = new System.Windows.Forms.TextBox();
             this.txtDat = new System.Windows.Forms.TextBox();
-            this.txtDir = new System.Windows.Forms.TextBox();
+            this.txtOutputDir = new System.Windows.Forms.TextBox();
             this.txtCode = new System.Windows.Forms.TextBox();
             this.txtMeta = new System.Windows.Forms.TextBox();
             this.btnFile = new System.Windows.Forms.Button();
@@ -65,9 +65,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 15);
+            this.label1.Size = new System.Drawing.Size(83, 15);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Executable file:";
+            this.label1.Text = "Library .so file:";
             // 
             // label2
             // 
@@ -123,12 +123,12 @@
             this.label9.TabIndex = 8;
             this.label9.Text = "Drop APK or decrypted IPA file to start dumping";
             // 
-            // txtFile
+            // txtSoFile
             // 
-            this.txtFile.Location = new System.Drawing.Point(136, 12);
-            this.txtFile.Name = "txtFile";
-            this.txtFile.Size = new System.Drawing.Size(281, 23);
-            this.txtFile.TabIndex = 9;
+            this.txtSoFile.Location = new System.Drawing.Point(136, 12);
+            this.txtSoFile.Name = "txtSoFile";
+            this.txtSoFile.Size = new System.Drawing.Size(281, 23);
+            this.txtSoFile.TabIndex = 9;
             // 
             // txtDat
             // 
@@ -137,12 +137,12 @@
             this.txtDat.Size = new System.Drawing.Size(281, 23);
             this.txtDat.TabIndex = 10;
             // 
-            // txtDir
+            // txtOutputDir
             // 
-            this.txtDir.Location = new System.Drawing.Point(136, 70);
-            this.txtDir.Name = "txtDir";
-            this.txtDir.Size = new System.Drawing.Size(229, 23);
-            this.txtDir.TabIndex = 11;
+            this.txtOutputDir.Location = new System.Drawing.Point(136, 70);
+            this.txtOutputDir.Name = "txtOutputDir";
+            this.txtOutputDir.Size = new System.Drawing.Size(229, 23);
+            this.txtOutputDir.TabIndex = 11;
             // 
             // txtCode
             // 
@@ -306,9 +306,9 @@
             this.Controls.Add(this.btnFile);
             this.Controls.Add(this.txtMeta);
             this.Controls.Add(this.txtCode);
-            this.Controls.Add(this.txtDir);
+            this.Controls.Add(this.txtOutputDir);
             this.Controls.Add(this.txtDat);
-            this.Controls.Add(this.txtFile);
+            this.Controls.Add(this.txtSoFile);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -326,7 +326,6 @@
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.FrmMain_DragDropAsync);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.FrmMain_DragEnter);
-            this.DragOver += new System.Windows.Forms.DragEventHandler(this.FrmMain_DragOver);
             this.groupBox1.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -343,9 +342,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox txtFile;
+        private System.Windows.Forms.TextBox txtSoFile;
         private System.Windows.Forms.TextBox txtDat;
-        private System.Windows.Forms.TextBox txtDir;
+        private System.Windows.Forms.TextBox txtOutputDir;
         private System.Windows.Forms.TextBox txtCode;
         private System.Windows.Forms.TextBox txtMeta;
         private System.Windows.Forms.Button btnFile;

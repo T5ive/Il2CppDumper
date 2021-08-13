@@ -21,10 +21,14 @@ namespace Il2CppDumper
 {
     public partial class FrmMain : Form
     {
-        public FrmMain()
+        public FrmMain(string[] args = null)
         {
             InitializeComponent();
             _FrmMain = this;
+            if (args != null)
+            {
+                RunDump(args);
+            }
         }
 
         #region Variable
@@ -40,8 +44,63 @@ namespace Il2CppDumper
         private readonly string realPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string tempPath = Path.GetTempPath() + "\\";
         private static Config _config;
+        private static string _soFile, _datFile, _outputDir;
+
+        private string SoFile
+        {
+            get => _soFile;
+
+            set
+            {
+                if (_soFile == value) return;
+                _soFile = value;
+                ChangeText(txtSoFile, value);
+            }
+        }
+
+        private string DatFile
+        {
+            get => _datFile;
+
+            set
+            {
+                if (_datFile == value) return;
+                _datFile = value;
+                ChangeText(txtDat, value);
+            }
+        }
+
+        private string OutputDir
+        {
+            get => _outputDir;
+
+            set
+            {
+                if (_outputDir == value) return;
+                _outputDir = value;
+                ChangeText(txtOutputDir, value);
+            }
+        }
 
         #endregion Variable
+
+        #region Utility
+
+        private static void ChangeText(TextBox textBox, string text)
+        {
+            try
+            {
+                textBox.Text = text;
+            }
+            catch 
+            {
+                //
+            }
+            
+        }
+
+        #endregion
+
 
         #region Load/Save
 
@@ -83,13 +142,13 @@ namespace Il2CppDumper
         {
             if (openBin.ShowDialog() == DialogResult.OK)
             {
-                txtFile.Text = openBin.FileName;
+                SoFile = openBin.FileName;
                 txtCode.Clear();
                 txtMeta.Clear();
 
                 if (Settings.Default.AutoSetDir)
                 {
-                    txtDir.Text = Path.GetDirectoryName(txtFile.Text) + @"\dumped\";
+                    OutputDir = Path.GetDirectoryName(SoFile) + @"\dumped\";
                 }
             }
         }
@@ -98,7 +157,7 @@ namespace Il2CppDumper
         {
             if (openDat.ShowDialog() == DialogResult.OK)
             {
-                txtDat.Text = openDat.FileName;
+                DatFile = openDat.FileName;
                 txtCode.Clear();
                 txtMeta.Clear();
             }
@@ -108,13 +167,13 @@ namespace Il2CppDumper
         {
             if (openDir.ShowDialog() == DialogResult.OK)
             {
-                txtDir.Text = openDir.SelectedPath + @"\";
+                OutputDir = openDir.SelectedPath + @"\";
             }
         }
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            Process.Start("explorer.exe", txtDir.Text);
+            Process.Start("explorer.exe", OutputDir);
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -131,25 +190,25 @@ namespace Il2CppDumper
         {
             rbLog.Clear();
 
-            if (string.IsNullOrWhiteSpace(txtFile.Text))
+            if (string.IsNullOrWhiteSpace(SoFile))
             {
                 WriteOutput("Executable file is not selected", Color.Red);
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(txtDat.Text))
+            if (string.IsNullOrWhiteSpace(DatFile))
             {
                 WriteOutput("Metadata-global.dat file is not selected", Color.Red);
                 return;
             }
 
-            if (!Directory.Exists(txtDir.Text))
+            if (!Directory.Exists(OutputDir))
             {
                 WriteOutput("Output directory does not exist", Color.Red);
                 try
                 {
-                    Directory.CreateDirectory($"{txtDir.Text}");
-                    WriteOutput($"Create directory at {txtDir.Text}", Color.LimeGreen);
+                    Directory.CreateDirectory($"{OutputDir}");
+                    WriteOutput($"Create directory at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -160,7 +219,7 @@ namespace Il2CppDumper
 
             FormState(State.Running);
 
-            await Task.Factory.StartNew(() => Dumper(txtFile.Text, txtDat.Text, txtDir.Text)).ConfigureAwait(false);
+            await Task.Factory.StartNew(() => Dumper(SoFile, DatFile, OutputDir)).ConfigureAwait(false);
 
             FormState(State.Idle);
         }
@@ -190,13 +249,13 @@ namespace Il2CppDumper
         {
             var guiPath = AppDomain.CurrentDomain.BaseDirectory;
 
-            if (Settings.Default.ghidra && File.Exists(guiPath + "ghidra.py") && !File.Exists(txtDir.Text + "ghidra.py"))
+            if (Settings.Default.ghidra && File.Exists(guiPath + "ghidra.py") && !File.Exists(OutputDir + "ghidra.py"))
             {
                 WriteOutput("ghidra.py does not exist", Color.Red);
                 try
                 {
-                    File.Copy(guiPath + "ghidra.py", txtDir.Text + "ghidra.py");
-                    WriteOutput($"Create ghidra.py at {txtDir.Text}", Color.LimeGreen);
+                    File.Copy(guiPath + "ghidra.py", OutputDir + "ghidra.py");
+                    WriteOutput($"Create ghidra.py at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -204,13 +263,13 @@ namespace Il2CppDumper
                     return;
                 }
             }
-            if (Settings.Default.ghidra_with_struct && File.Exists(guiPath + "ghidra_with_struct.py") && !File.Exists(txtDir.Text + "ghidra_with_struct.py"))
+            if (Settings.Default.ghidra_with_struct && File.Exists(guiPath + "ghidra_with_struct.py") && !File.Exists(OutputDir + "ghidra_with_struct.py"))
             {
                 WriteOutput("ghidra_with_struct.py does not exist", Color.Red);
                 try
                 {
-                    File.Copy(guiPath + "ghidra_with_struct.py", txtDir.Text + "ghidra_with_struct.py");
-                    WriteOutput($"Create ghidra_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                    File.Copy(guiPath + "ghidra_with_struct.py", OutputDir + "ghidra_with_struct.py");
+                    WriteOutput($"Create ghidra_with_struct.py at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -218,13 +277,13 @@ namespace Il2CppDumper
                     return;
                 }
             }
-            if (Settings.Default.ida && File.Exists(guiPath + "ida.py") && !File.Exists(txtDir.Text + "ida.py"))
+            if (Settings.Default.ida && File.Exists(guiPath + "ida.py") && !File.Exists(OutputDir + "ida.py"))
             {
                 WriteOutput("ida.py does not exist", Color.Red);
                 try
                 {
-                    File.Copy(guiPath + "ida.py", txtDir.Text + "ida.py");
-                    WriteOutput($"Create ida.py at {txtDir.Text}", Color.LimeGreen);
+                    File.Copy(guiPath + "ida.py", OutputDir + "ida.py");
+                    WriteOutput($"Create ida.py at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -232,13 +291,13 @@ namespace Il2CppDumper
                     return;
                 }
             }
-            if (Settings.Default.ida_py3 && File.Exists(guiPath + "ida_py3.py") && !File.Exists(txtDir.Text + "ida_py3.py"))
+            if (Settings.Default.ida_py3 && File.Exists(guiPath + "ida_py3.py") && !File.Exists(OutputDir + "ida_py3.py"))
             {
                 WriteOutput("ida_py3.py does not exist", Color.Red);
                 try
                 {
-                    File.Copy(guiPath + "ida_py3.py", txtDir.Text + "ida_py3.py");
-                    WriteOutput($"Create ida_py3.py at {txtDir.Text}", Color.LimeGreen);
+                    File.Copy(guiPath + "ida_py3.py", OutputDir + "ida_py3.py");
+                    WriteOutput($"Create ida_py3.py at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -246,13 +305,13 @@ namespace Il2CppDumper
                     return;
                 }
             }
-            if (Settings.Default.ida_with_struct && File.Exists(guiPath + "ida_with_struct.py") && !File.Exists(txtDir.Text + "ida_with_struct.py"))
+            if (Settings.Default.ida_with_struct && File.Exists(guiPath + "ida_with_struct.py") && !File.Exists(OutputDir + "ida_with_struct.py"))
             {
                 WriteOutput("ida_with_struct.py does not exist", Color.Red);
                 try
                 {
-                    File.Copy(guiPath + "ida_with_struct.py", txtDir.Text + "ida_with_struct.py");
-                    WriteOutput($"Create ida_with_struct.py at {txtDir.Text}", Color.LimeGreen);
+                    File.Copy(guiPath + "ida_with_struct.py", OutputDir + "ida_with_struct.py");
+                    WriteOutput($"Create ida_with_struct.py at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -260,13 +319,13 @@ namespace Il2CppDumper
                     return;
                 }
             }
-            if (Settings.Default.ida_with_struct_py3 && File.Exists(guiPath + "ida_with_struct_py3.py") && !File.Exists(txtDir.Text + "ida_with_struct_py3.py"))
+            if (Settings.Default.ida_with_struct_py3 && File.Exists(guiPath + "ida_with_struct_py3.py") && !File.Exists(OutputDir + "ida_with_struct_py3.py"))
             {
                 WriteOutput("ida_with_struct_py3.py does not exist", Color.Red);
                 try
                 {
-                    File.Copy(guiPath + "ida_with_struct_py3.py", txtDir.Text + "ida_with_struct_py3.py");
-                    WriteOutput($"Create ida_with_struct_py3.py at {txtDir.Text}", Color.LimeGreen);
+                    File.Copy(guiPath + "ida_with_struct_py3.py", OutputDir + "ida_with_struct_py3.py");
+                    WriteOutput($"Create ida_with_struct_py3.py at {OutputDir}", Color.LimeGreen);
                 }
                 catch
                 {
@@ -440,6 +499,79 @@ namespace Il2CppDumper
 
         #region Drag/Drop
 
+        private async void RunDump(string[] files)
+        {
+            try
+            {
+                FormState(State.Running);
+
+                if (files.Length > 1)
+                {
+                    DeleteFile(tempPath + "global-metadata.dat");
+                    DeleteFile(tempPath + "libil2cpp.so");
+                }
+                var outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
+                if (Settings.Default.AutoSetDir)
+                {
+                    OutputDir = outputPath;
+                }
+                else
+                {
+                    outputPath = OutputDir + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
+                }
+
+                foreach (var file in files)
+                {
+                    switch (Path.GetExtension(file))
+                    {
+                        case ".so":
+                            SoFile = file;
+                            break;
+                        case ".dat":
+                            DatFile = file;
+                            break;
+                        case ".apk":
+                            {
+                                rbLog.Text = "";
+                                if (files.Length > 1)
+                                {
+                                    WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
+                                    await APKSplitDump(file, outputPath).ConfigureAwait(false);
+                                }
+                                else
+                                {
+                                    await APKDump(file, outputPath).ConfigureAwait(false);
+                                }
+
+                                break;
+                            }
+                        case ".apks":
+                        case ".xapk":
+                            rbLog.Text = "";
+                            await APKsDump(file, outputPath).ConfigureAwait(false);
+                            break;
+                        case ".ipa":
+                            rbLog.Text = "";
+                            await iOSDump(file, outputPath).ConfigureAwait(false);
+                            break;
+                        default:
+                            SoFile = file;
+                            break;
+                    }
+
+                    if (Settings.Default.AutoSetDir)
+                    {
+                        OutputDir = Path.GetDirectoryName(file) + @"\dumped\";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteOutput($"{ex.Message}", Color.Red);
+            }
+            FormState(State.Idle);
+        }
+
         private async void FrmMain_DragDropAsync(object sender, DragEventArgs e)
         {
             try
@@ -457,11 +589,11 @@ namespace Il2CppDumper
                 var outputPath = Path.GetDirectoryName(files[0]) + "\\" + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
                 if (Settings.Default.AutoSetDir)
                 {
-                    txtDir.Text = outputPath;
+                    OutputDir = outputPath;
                 }
                 else
                 {
-                    outputPath = txtDir.Text + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
+                    outputPath = OutputDir + Path.GetFileNameWithoutExtension(files[0]) + "_dumped\\";
                 }
 
                 foreach (var file in files)
@@ -469,10 +601,10 @@ namespace Il2CppDumper
                     switch (Path.GetExtension(file))
                     {
                         case ".so":
-                            txtFile.Text = file;
+                            SoFile = file;
                             break;
                         case ".dat":
-                            txtDat.Text = file;
+                            DatFile = file;
                             break;
                         case ".apk":
                         {
@@ -499,13 +631,13 @@ namespace Il2CppDumper
                             await iOSDump(file, outputPath).ConfigureAwait(false);
                             break;
                         default:
-                            txtFile.Text = file;
+                            SoFile = file;
                             break;
                     }
 
                     if (Settings.Default.AutoSetDir)
                     {
-                        txtDir.Text = Path.GetDirectoryName(file) + @"\dumped\";
+                        OutputDir = Path.GetDirectoryName(file) + @"\dumped\";
                     }
                 }
             }
@@ -519,22 +651,9 @@ namespace Il2CppDumper
         private void FrmMain_DragEnter(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var file in files)
-            {
-                Path.GetExtension(file);
-                e.Effect = DragDropEffects.Copy;
-            }
+            e.Effect = DragDropEffects.Copy;
         }
-
-        private void FrmMain_DragOver(object sender, DragEventArgs e)
-        {
-            foreach (var file in (string[])e.Data.GetData(DataFormats.FileDrop))
-            {
-                Path.GetExtension(file);
-            }
-        }
-
+        
         private static string FileDir(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
