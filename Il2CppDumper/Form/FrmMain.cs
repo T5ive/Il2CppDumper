@@ -1,6 +1,8 @@
-﻿using Il2CppDumper;
+﻿using Il2CppDumper.Properties;
+using Il2CppDumperGui;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -12,8 +14,6 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Il2CppDumper.Properties;
-using Il2CppDumperGui;
 
 // https://github.com/AndnixSH/Il2CppDumper-GUI
 
@@ -24,7 +24,6 @@ namespace Il2CppDumper
         public FrmMain(string[] args = null)
         {
             InitializeComponent();
-            _FrmMain = this;
             if (args != null)
             {
                 RunDump(args);
@@ -39,7 +38,7 @@ namespace Il2CppDumper
             Running
         }
 
-        public static FrmMain _FrmMain;
+        
 
         private readonly string realPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string tempPath = Path.GetTempPath() + "\\";
@@ -92,21 +91,19 @@ namespace Il2CppDumper
             {
                 textBox.Text = text;
             }
-            catch 
+            catch
             {
                 //
             }
-            
         }
 
-        #endregion
-
+        #endregion Utility
 
         #region Load/Save
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            Text += $@" - {Assembly.GetExecutingAssembly().GetName().Version}";
+            Text += $" - {Assembly.GetExecutingAssembly().GetName().Version}";
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             LoadLocation();
         }
@@ -385,6 +382,7 @@ namespace Il2CppDumper
                         il2Cpp = new Elf(il2CppMemory);
                     }
                     break;
+
                 case 0xCAFEBABE: //FAT Mach-O
                 case 0xBEBAFECA:
                     var machofat = new MachoFat(new MemoryStream(il2CppBytes));
@@ -446,7 +444,7 @@ namespace Il2CppDumper
                 {
                     WriteOutput("ERROR: Can't use auto mode to process file, try manual mode.");
                     WriteOutput("Input CodeRegistration: ");
-                    
+
                     var codeValue = "";
                     if (InputBox.Show(@"Input CodeRegistration: ", "", ref codeValue) != DialogResult.OK) return false;
                     var codeRegistration = Convert.ToUInt64(codeValue, 16);
@@ -459,7 +457,6 @@ namespace Il2CppDumper
 
                     il2Cpp.Init(codeRegistration, metadataRegistration);
                     return true;
-
                 }
             }
             catch (Exception e)
@@ -494,18 +491,17 @@ namespace Il2CppDumper
             }
         }
 
-
         #endregion Dump
 
         #region Drag/Drop
 
-        private async void RunDump(string[] files)
+        private async void RunDump(IReadOnlyList<string> files)
         {
             try
             {
                 FormState(State.Running);
 
-                if (files.Length > 1)
+                if (files.Count > 1)
                 {
                     DeleteFile(tempPath + "global-metadata.dat");
                     DeleteFile(tempPath + "libil2cpp.so");
@@ -527,13 +523,15 @@ namespace Il2CppDumper
                         case ".so":
                             SoFile = file;
                             break;
+
                         case ".dat":
                             DatFile = file;
                             break;
+
                         case ".apk":
                             {
                                 rbLog.Text = "";
-                                if (files.Length > 1)
+                                if (files.Count > 1)
                                 {
                                     WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
                                     await APKSplitDump(file, outputPath).ConfigureAwait(false);
@@ -550,10 +548,12 @@ namespace Il2CppDumper
                             rbLog.Text = "";
                             await APKsDump(file, outputPath).ConfigureAwait(false);
                             break;
+
                         case ".ipa":
                             rbLog.Text = "";
                             await iOSDump(file, outputPath).ConfigureAwait(false);
                             break;
+
                         default:
                             SoFile = file;
                             break;
@@ -603,33 +603,37 @@ namespace Il2CppDumper
                         case ".so":
                             SoFile = file;
                             break;
+
                         case ".dat":
                             DatFile = file;
                             break;
-                        case ".apk":
-                        {
-                            rbLog.Text = "";
-                            if (files.Length > 1)
-                            {
-                                WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
-                                await APKSplitDump(file, outputPath).ConfigureAwait(false);
-                            }
-                            else
-                            {
-                                await APKDump(file, outputPath).ConfigureAwait(false);
-                            }
 
-                            break;
-                        }
+                        case ".apk":
+                            {
+                                rbLog.Text = "";
+                                if (files.Length > 1)
+                                {
+                                    WriteOutput("Dumping Il2Cpp from splitted APKs...", Color.Cyan);
+                                    await APKSplitDump(file, outputPath).ConfigureAwait(false);
+                                }
+                                else
+                                {
+                                    await APKDump(file, outputPath).ConfigureAwait(false);
+                                }
+
+                                break;
+                            }
                         case ".apks":
                         case ".xapk":
                             rbLog.Text = "";
                             await APKsDump(file, outputPath).ConfigureAwait(false);
                             break;
+
                         case ".ipa":
                             rbLog.Text = "";
                             await iOSDump(file, outputPath).ConfigureAwait(false);
                             break;
+
                         default:
                             SoFile = file;
                             break;
@@ -653,12 +657,12 @@ namespace Il2CppDumper
             if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
             e.Effect = DragDropEffects.Copy;
         }
-        
+
         private static string FileDir(string path)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path)))
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
             }
             return path;
         }
@@ -745,9 +749,8 @@ namespace Il2CppDumper
             }
             catch (Exception e)
             {
-               WriteOutput("Error: " + e.Message,Color.Red);
+                WriteOutput("Error: " + e.Message, Color.Red);
             }
-            
         }
 
         private void EnableController(Form form, bool value)
@@ -763,6 +766,7 @@ namespace Il2CppDumper
                     case "RichTextBox":
                         control.Enabled = value;
                         break;
+
                     case "GroupBox":
                     case "Panel":
                     case "TableLayoutPanel":
@@ -786,6 +790,7 @@ namespace Il2CppDumper
                     case "RichTextBox":
                         control2.Enabled = value;
                         break;
+
                     case "GroupBox":
                     case "Panel":
                     case "TableLayoutPanel":
@@ -815,7 +820,7 @@ namespace Il2CppDumper
                     var ipaBinaryName = match.ToString();
                     var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Data/Managed/Metadata/global-metadata.dat");
                     var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/{ipaBinaryName}");
-                    if (metadataFile != null)
+                    if (metadataFile != null && binaryFile != null)
                     {
                         metadataFile.ExtractToFile(tempPath + "global-metadata.dat", true);
                         if (rad64.Checked)

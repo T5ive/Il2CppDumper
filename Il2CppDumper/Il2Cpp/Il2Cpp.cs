@@ -57,7 +57,7 @@ namespace Il2CppDumper
                     {
                         Version = 24.4;
                         codeRegistration -= PointerSize * 3;
-                        Console.WriteLine($"Change il2cpp version to: {Version}");
+                        Program.frmMain.WriteOutput($"Change il2cpp version to: {Version}");
                     }
                     else
                     {
@@ -68,17 +68,17 @@ namespace Il2CppDumper
                         {
                             Version = 24.3;
                             codeRegistration -= Is32Bit ? 8u : 16u;
-                            Console.WriteLine($"Change il2cpp version to: {Version}");
+                            Program.frmMain.WriteOutput($"Change il2cpp version to: {Version}");
                         }
                     }
                 }
-                Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
-                Console.WriteLine("MetadataRegistration : {0:x}", metadataRegistration);
+                Program.frmMain.WriteOutput($"CodeRegistration : {codeRegistration:x}");
+                Program.frmMain.WriteOutput($"MetadataRegistration : {metadataRegistration:x}");
                 Init(codeRegistration, metadataRegistration);
                 return true;
             }
-            Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
-            Console.WriteLine("MetadataRegistration : {0:x}", metadataRegistration);
+            Program.frmMain.WriteOutput($"CodeRegistration : {codeRegistration:x}");
+            Program.frmMain.WriteOutput($"MetadataRegistration : {metadataRegistration:x}");
             return false;
         }
 
@@ -91,8 +91,8 @@ namespace Il2CppDumper
                 {
                     Version = 27.1;
                     codeRegistration -= PointerSize;
-                    Console.WriteLine($"Change il2cpp version to: {Version}");
-                    Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
+                    Program.frmMain.WriteOutput($"Change il2cpp version to: {Version}");
+                    Program.frmMain.WriteOutput($"CodeRegistration : {codeRegistration:x}");
                     pCodeRegistration = MapVATR<Il2CppCodeRegistration>(codeRegistration);
                 }
             }
@@ -102,8 +102,8 @@ namespace Il2CppDumper
                 {
                     Version = 24.4;
                     codeRegistration -= PointerSize * 3;
-                    Console.WriteLine($"Change il2cpp version to: {Version}");
-                    Console.WriteLine("CodeRegistration : {0:x}", codeRegistration);
+                    Program.frmMain.WriteOutput($"Change il2cpp version to: {Version}");
+                    Program.frmMain.WriteOutput($"CodeRegistration : {codeRegistration:x}");
                     pCodeRegistration = MapVATR<Il2CppCodeRegistration>(codeRegistration);
                 }
                 else
@@ -111,7 +111,7 @@ namespace Il2CppDumper
                     if (pCodeRegistration.codeGenModules == 0) //TODO
                     {
                         Version = 24.3;
-                        Console.WriteLine($"Change il2cpp version to: {Version}");
+                        Program.frmMain.WriteOutput($"Change il2cpp version to: {Version}");
                         pCodeRegistration = MapVATR<Il2CppCodeRegistration>(codeRegistration);
                     }
                 }

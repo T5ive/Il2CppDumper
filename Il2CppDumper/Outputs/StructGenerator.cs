@@ -394,7 +394,7 @@ namespace Il2CppDumper
                     sb.Append(HeaderConstants.HeaderV27);
                     break;
                 default:
-                    Console.WriteLine($"WARNING: This il2cpp version [{il2Cpp.Version}] does not support generating .h files");
+                    Program.frmMain.WriteOutput($"WARNING: This il2cpp version [{il2Cpp.Version}] does not support generating .h files");
                     return;
             }
             sb.Append(headerStruct);
