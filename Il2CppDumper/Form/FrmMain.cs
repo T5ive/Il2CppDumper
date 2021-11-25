@@ -386,15 +386,15 @@ namespace Il2CppDumper
                 case 0xCAFEBABE: //FAT Mach-O
                 case 0xBEBAFECA:
                     var machofat = new MachoFat(new MemoryStream(il2CppBytes));
-                    WriteOutput("Select Platform: ");
+                    var fatMagic = "";
                     for (var i = 0; i < machofat.fats.Length; i++)
                     {
                         var fat = machofat.fats[i];
-                        WriteOutput(fat.magic == 0xFEEDFACF ? $"{i + 1}.64bit " : $"{i + 1}.32bit ");
+                        fatMagic += fat.magic == 0xFEEDFACF ? $"{i + 1}.64bit\n" : $"{i + 1}.32bit\n";
                     }
-                    WriteOutput("");
-                    var key = Console.ReadKey(true);
-                    var index = int.Parse(key.KeyChar.ToString()) - 1;
+                    var key = "";
+                    if (InputBox.Show(fatMagic, "Select Platform:", ref key) != DialogResult.OK) break;
+                    var index = int.Parse(key) - 1;
                     var magic = machofat.fats[index % 2].magic;
                     il2CppBytes = machofat.GetMacho(index % 2);
                     il2CppMemory = new MemoryStream(il2CppBytes);
