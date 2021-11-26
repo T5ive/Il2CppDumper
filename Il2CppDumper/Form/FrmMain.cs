@@ -393,7 +393,11 @@ namespace Il2CppDumper
                         fatMagic += fat.magic == 0xFEEDFACF ? $"{i + 1}.64bit\n" : $"{i + 1}.32bit\n";
                     }
                     var key = "";
-                    if (InputBox.Show(fatMagic, "Select Platform:", ref key) != DialogResult.OK) break;
+                    if (InputBox.Show(fatMagic, "Select Platform:", ref key) != DialogResult.OK)
+                    {
+                        il2Cpp = null;
+                        return false;
+                    }
                     var index = int.Parse(key) - 1;
                     var magic = machofat.fats[index % 2].magic;
                     il2CppBytes = machofat.GetMacho(index % 2);
