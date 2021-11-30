@@ -38,8 +38,6 @@ namespace Il2CppDumper
             Running
         }
 
-        
-
         private readonly string realPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\";
         private readonly string tempPath = Path.GetTempPath() + "\\";
         private static Config _config;
