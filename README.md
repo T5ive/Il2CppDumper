@@ -53,6 +53,10 @@ structure information header file
 
 For Ghidra
 
+#### ghidra_wasm.py
+
+For Ghidra, work with [ghidra-wasm-plugin](https://github.com/nneonneo/ghidra-wasm-plugin)
+
 #### script.json
 
 For ida.py and ghidra.py
