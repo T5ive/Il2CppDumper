@@ -8,125 +8,171 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Il2CppDumper.Properties {
-    
-    
+namespace Il2CppDumper.Properties
+{
+
+
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
-        
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
+    {
+
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-        
-        public static Settings Default {
-            get {
+
+        public static Settings Default
+        {
+            get
+            {
                 return defaultInstance;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AutoSetDir {
-            get {
+        public bool AutoSetDir
+        {
+            get
+            {
                 return ((bool)(this["AutoSetDir"]));
             }
-            set {
+            set
+            {
                 this["AutoSetDir"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool extBin {
-            get {
+        public bool extBin
+        {
+            get
+            {
                 return ((bool)(this["extBin"]));
             }
-            set {
+            set
+            {
                 this["extBin"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ghidra {
-            get {
+        public bool ghidra
+        {
+            get
+            {
                 return ((bool)(this["ghidra"]));
             }
-            set {
+            set
+            {
                 this["ghidra"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ghidra_with_struct {
-            get {
+        public bool ghidra_with_struct
+        {
+            get
+            {
                 return ((bool)(this["ghidra_with_struct"]));
             }
-            set {
+            set
+            {
                 this["ghidra_with_struct"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ida {
-            get {
+        public bool il2cpp_header_to_ghidra
+        {
+            get
+            {
+                return ((bool)(this["il2cpp_header_to_ghidra"]));
+            }
+            set
+            {
+                this["il2cpp_header_to_ghidra"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ida
+        {
+            get
+            {
                 return ((bool)(this["ida"]));
             }
-            set {
+            set
+            {
                 this["ida"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ida_py3 {
-            get {
+        public bool ida_py3
+        {
+            get
+            {
                 return ((bool)(this["ida_py3"]));
             }
-            set {
+            set
+            {
                 this["ida_py3"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ida_with_struct {
-            get {
+        public bool ida_with_struct
+        {
+            get
+            {
                 return ((bool)(this["ida_with_struct"]));
             }
-            set {
+            set
+            {
                 this["ida_with_struct"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ida_with_struct_py3 {
-            get {
+        public bool ida_with_struct_py3
+        {
+            get
+            {
                 return ((bool)(this["ida_with_struct_py3"]));
             }
-            set {
+            set
+            {
                 this["ida_with_struct_py3"] = value;
             }
         }
-        
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
-        public global::System.Drawing.Point Location {
-            get {
+        public global::System.Drawing.Point Location
+        {
+            get
+            {
                 return ((global::System.Drawing.Point)(this["Location"]));
             }
-            set {
+            set
+            {
                 this["Location"] = value;
             }
         }

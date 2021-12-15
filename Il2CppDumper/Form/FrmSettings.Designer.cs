@@ -84,7 +84,7 @@
             // 
             // btnApply
             // 
-            this.btnApply.Location = new System.Drawing.Point(12, 282);
+            this.btnApply.Location = new System.Drawing.Point(12, 303);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(195, 23);
             this.btnApply.TabIndex = 4;
@@ -97,7 +97,7 @@
             this.groupBox3.Controls.Add(this.clbScripts);
             this.groupBox3.Location = new System.Drawing.Point(12, 134);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(195, 142);
+            this.groupBox3.Size = new System.Drawing.Size(195, 163);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Auto copy script files";
@@ -108,20 +108,21 @@
             this.clbScripts.Items.AddRange(new object[] {
             "ghidra.py",
             "ghidra_with_struct.py",
+            "il2cpp_header_to_ghidra.py",
             "ida.py",
             "ida_py3.py",
             "ida_with_struct.py",
             "ida_with_struct_py3.py"});
             this.clbScripts.Location = new System.Drawing.Point(6, 22);
             this.clbScripts.Name = "clbScripts";
-            this.clbScripts.Size = new System.Drawing.Size(183, 112);
+            this.clbScripts.Size = new System.Drawing.Size(183, 130);
             this.clbScripts.TabIndex = 1;
             // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(219, 317);
+            this.ClientSize = new System.Drawing.Size(219, 338);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.groupBox2);
