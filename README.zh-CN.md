@@ -1,6 +1,6 @@
 # Il2CppDumper
 
-![](https://i.imgur.com/zBnIrDb.png)
+![](https://i.imgur.com/gbT4twO.png)
 
 Unity il2cpp逆向工程
 
