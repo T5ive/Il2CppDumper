@@ -45,8 +45,6 @@
             this.btnDat = new System.Windows.Forms.Button();
             this.btnDir = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
-            this.rad32 = new System.Windows.Forms.RadioButton();
-            this.rad64 = new System.Windows.Forms.RadioButton();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnDump = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -56,6 +54,7 @@
             this.openBin = new System.Windows.Forms.OpenFileDialog();
             this.openDat = new System.Windows.Forms.OpenFileDialog();
             this.openDir = new System.Windows.Forms.FolderBrowserDialog();
+            this.cbArch = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -108,11 +107,11 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(311, 139);
+            this.label6.Location = new System.Drawing.Point(49, 139);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(54, 15);
+            this.label6.Size = new System.Drawing.Size(81, 15);
             this.label6.TabIndex = 5;
-            this.label6.Text = "Mach-O:";
+            this.label6.Text = "Android Arch:";
             // 
             // label9
             // 
@@ -198,31 +197,9 @@
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // rad32
-            // 
-            this.rad32.AutoSize = true;
-            this.rad32.Location = new System.Drawing.Point(380, 137);
-            this.rad32.Name = "rad32";
-            this.rad32.Size = new System.Drawing.Size(56, 19);
-            this.rad32.TabIndex = 15;
-            this.rad32.Text = "32-bit";
-            this.rad32.UseVisualStyleBackColor = true;
-            // 
-            // rad64
-            // 
-            this.rad64.AutoSize = true;
-            this.rad64.Checked = true;
-            this.rad64.Location = new System.Drawing.Point(442, 137);
-            this.rad64.Name = "rad64";
-            this.rad64.Size = new System.Drawing.Size(56, 19);
-            this.rad64.TabIndex = 16;
-            this.rad64.TabStop = true;
-            this.rad64.Text = "64-bit";
-            this.rad64.UseVisualStyleBackColor = true;
-            // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(12, 135);
+            this.btnSettings.Location = new System.Drawing.Point(422, 135);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(75, 23);
             this.btnSettings.TabIndex = 17;
@@ -288,6 +265,19 @@
             // 
             this.openDir.Description = "Select output directory";
             // 
+            // cbArch
+            // 
+            this.cbArch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbArch.FormattingEnabled = true;
+            this.cbArch.Items.AddRange(new object[] {
+            "All",
+            "ARMv7",
+            "ARM64"});
+            this.cbArch.Location = new System.Drawing.Point(136, 135);
+            this.cbArch.Name = "cbArch";
+            this.cbArch.Size = new System.Drawing.Size(126, 23);
+            this.cbArch.TabIndex = 20;
+            // 
             // FrmMain
             // 
             this.AllowDrop = true;
@@ -295,11 +285,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(509, 461);
+            this.Controls.Add(this.cbArch);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnDump);
             this.Controls.Add(this.btnSettings);
-            this.Controls.Add(this.rad64);
-            this.Controls.Add(this.rad32);
             this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnDir);
             this.Controls.Add(this.btnDat);
@@ -351,8 +340,6 @@
         private System.Windows.Forms.Button btnDat;
         private System.Windows.Forms.Button btnDir;
         private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.RadioButton rad32;
-        private System.Windows.Forms.RadioButton rad64;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnDump;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -362,6 +349,7 @@
         private System.Windows.Forms.OpenFileDialog openBin;
         private System.Windows.Forms.OpenFileDialog openDat;
         private System.Windows.Forms.FolderBrowserDialog openDir;
+        private System.Windows.Forms.ComboBox cbArch;
     }
 }
 

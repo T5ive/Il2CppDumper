@@ -105,6 +105,7 @@ namespace Il2CppDumper
             Text += $" - {Assembly.GetExecutingAssembly().GetName().Version}";
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             LoadLocation();
+            cbArch.SelectedIndex = Settings.Default.Arch;
         }
 
         private void LoadLocation()
@@ -121,6 +122,7 @@ namespace Il2CppDumper
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Settings.Default.Arch = cbArch.SelectedIndex;
             CloseLocation();
         }
 
@@ -766,8 +768,10 @@ namespace Il2CppDumper
                     var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/{ipaBinaryName}");
                     if (metadataFile != null && binaryFile != null)
                     {
+                        if (Settings.Default.extDat)
+                            metadataFile.ExtractToFile(FileDir(outputPath + "\\global-metadata.dat"), true);
                         metadataFile.ExtractToFile(tempPath + "global-metadata.dat", true);
-                        if (rad64.Checked)
+                        if (Settings.Default.machO64)
                         {
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
@@ -821,11 +825,13 @@ namespace Il2CppDumper
 
                 if (metadataFile != null)
                 {
+                    if (Settings.Default.extDat)
+                        metadataFile.ExtractToFile(FileDir(outputPath + "\\global-metadata.dat"), true);
                     metadataFile.ExtractToFile(tempPath + "global-metadata.dat", true);
 
                     foreach (var entry in archive.Entries)
                     {
-                        if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so"))
+                        if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so") && Settings.Default.Arch is 0 or 1)
                         {
                             WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
@@ -835,7 +841,7 @@ namespace Il2CppDumper
                             Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
                         }
 
-                        if (entry.FullName.Equals("lib/arm64-v8a/libil2cpp.so"))
+                        if (entry.FullName.Equals("lib/arm64-v8a/libil2cpp.so") && Settings.Default.Arch is 0 or 2)
                         {
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
@@ -845,7 +851,7 @@ namespace Il2CppDumper
                             Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
                         }
 
-                        if (entry.FullName.Equals("lib/x86/libil2cpp.so"))
+                        if (entry.FullName.Equals("lib/x86/libil2cpp.so") && Settings.Default.Arch is 0)
                         {
                             WriteOutput("Dumping x86...", Color.Chartreuse);
 
@@ -872,18 +878,12 @@ namespace Il2CppDumper
                 var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
                 var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
 
-                if (metadataFile != null)
-                {
-                    Debug.WriteLine("Extracted global-metadata.dat to temp");
-                    metadataFile.ExtractToFile(tempPath + "global-metadata.dat", true);
-                }
-
-                if (binaryFile != null)
-                {
-                    Debug.WriteLine("Extracted libil2cpp.so to temp");
-                    binaryFile.ExtractToFile(tempPath + "libil2cpp.so", true);
-                }
-
+                metadataFile?.ExtractToFile(tempPath + "global-metadata.dat", true);
+                if (Settings.Default.extDat)
+                    metadataFile?.ExtractToFile(FileDir(outputPath + "\\global-metadata.dat"), true);
+                binaryFile?.ExtractToFile(tempPath + "libil2cpp.so", true);
+                if (Settings.Default.extBin)
+                    binaryFile?.ExtractToFile(FileDir(outputPath + "\\libil2cpp.so"), true);
                 if (File.Exists(tempPath + "libil2cpp.so") && File.Exists(tempPath + "global-metadata.dat"))
                 {
                     Dumper(tempPath + "libil2cpp.so", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
@@ -908,6 +908,8 @@ namespace Il2CppDumper
                         var metadataFile = entryBase.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
 
                         metadataFile?.ExtractToFile(tempPath + "global-metadata.dat", true);
+                        if (Settings.Default.extDat)
+                            metadataFile?.ExtractToFile(FileDir(outputPath + "\\global-metadata.dat"), true);
 
                         if (binaryFile != null)
                         {
@@ -915,7 +917,7 @@ namespace Il2CppDumper
 
                             foreach (var entry in entryBase.Entries)
                             {
-                                if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so"))
+                                if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so") && Settings.Default.Arch is 0 or 1)
                                 {
                                     WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
@@ -925,7 +927,7 @@ namespace Il2CppDumper
                                     Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
                                 }
 
-                                if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so"))
+                                if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so") && Settings.Default.Arch is 0 or 2)
                                 {
                                     WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
@@ -935,7 +937,7 @@ namespace Il2CppDumper
                                     Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
                                 }
 
-                                if (entry.FullName.Equals(@"lib/x86/libil2cpp.so"))
+                                if (entry.FullName.Equals(@"lib/x86/libil2cpp.so") && Settings.Default.Arch is 0)
                                 {
                                     WriteOutput("Dumping x86...", Color.Chartreuse);
 

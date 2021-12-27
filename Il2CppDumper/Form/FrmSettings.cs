@@ -13,7 +13,9 @@ namespace Il2CppDumper
         private void FrmSettings_Load(object sender, EventArgs e)
         {
             cbAutoSetDir.Checked = Properties.Settings.Default.AutoSetDir;
-            cbExtBin.Checked = Properties.Settings.Default.extBin;
+            rad64.Checked = Properties.Settings.Default.machO64;
+            chkExtBin.Checked = Properties.Settings.Default.extBin;
+            chkExtDat.Checked = Properties.Settings.Default.extDat;
             clbScripts.SetItemChecked(0, Properties.Settings.Default.ghidra);
             clbScripts.SetItemChecked(1, Properties.Settings.Default.ghidra_with_struct);
             clbScripts.SetItemChecked(2, Properties.Settings.Default.il2cpp_header_to_ghidra);
@@ -26,7 +28,9 @@ namespace Il2CppDumper
         private void Save()
         {
             Properties.Settings.Default.AutoSetDir = cbAutoSetDir.Checked;
-            Properties.Settings.Default.extBin = cbExtBin.Checked;
+            Properties.Settings.Default.machO64 = rad64.Checked;
+            Properties.Settings.Default.extBin = chkExtBin.Checked;
+            Properties.Settings.Default.extDat = chkExtDat.Checked;
             Properties.Settings.Default.ghidra = clbScripts.GetItemChecked(0);
             Properties.Settings.Default.ghidra_with_struct = clbScripts.GetItemChecked(1);
             Properties.Settings.Default.il2cpp_header_to_ghidra = clbScripts.GetItemChecked(2);
