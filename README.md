@@ -1,6 +1,6 @@
 # Il2CppDumper
 
-![](https://i.imgur.com/zBnIrDb.png)
+![](https://i.imgur.com/gbT4twO.png)
 
 中文说明请戳[这里](README.zh-CN.md)
 
