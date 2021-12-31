@@ -5,8 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Version></Version>
-    <AssemblyVersion>1.3.5.1</AssemblyVersion>
-    <FileVersion>1.3.5.1</FileVersion>
+    <AssemblyVersion></AssemblyVersion>
+    <FileVersion>1.3.6</FileVersion>
     <Copyright>Copyright © Perfare 2016-2020</Copyright>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <ApplicationIcon>T5 - 32.ico</ApplicationIcon>
@@ -23,28 +23,28 @@
     <None Update="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ghidra.py">
+    <None Update="Scripts\ghidra.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ghidra_wasm.py">
+    <None Update="Scripts\ghidra_wasm.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ghidra_with_struct.py">
+    <None Update="Scripts\ghidra_with_struct.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ida.py">
+    <None Update="Scripts\ida.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ida_py3.py">
+    <None Update="Scripts\ida_py3.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ida_with_struct.py">
+    <None Update="Scripts\ida_with_struct.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="ida_with_struct_py3.py">
+    <None Update="Scripts\ida_with_struct_py3.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="il2cpp_header_to_ghidra.py">
+    <None Update="Scripts\il2cpp_header_to_ghidra.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">

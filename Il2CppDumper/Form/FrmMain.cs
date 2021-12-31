@@ -245,7 +245,7 @@ namespace Il2CppDumper
 
         private void CopyScripts()
         {
-            var guiPath = AppDomain.CurrentDomain.BaseDirectory;
+            var guiPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts");
 
             foreach (SettingsProperty currentProperty in Settings.Default.Properties)
             {
@@ -254,8 +254,8 @@ namespace Il2CppDumper
                     var fileName = currentProperty.Name + ".py";
                     var source = guiPath + fileName;
                     var dest = OutputDir + fileName;
-                    if (Settings.Default[currentProperty.Name].ToString() == "True" &&
-                        File.Exists(source) && !File.Exists(dest))
+                    if (Settings.Default[currentProperty.Name].ToString() == "True"
+                        && File.Exists(source) && !File.Exists(dest))
                     {
                         WriteOutput(fileName + "does not exist", Color.Red);
                         try
