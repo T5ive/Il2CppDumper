@@ -751,9 +751,9 @@ namespace Il2CppDumper
 
         #region Auto Dump
 
-        private async Task iOSDump(string file, string outputPath)
+        private Task iOSDump(string file, string outputPath)
         {
-            await Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(() =>
             {
                 using var archive = ZipFile.OpenRead(file);
                 var ipaBinaryFolder = archive.Entries.FirstOrDefault(f => f.FullName.StartsWith("Payload/") && f.FullName.EndsWith(".app/") && f.FullName.Count(x => x == '/') == 2);
@@ -800,12 +800,12 @@ namespace Il2CppDumper
                     WriteOutput("Failed to extract required file. Please extract the files manually", Color.Yellow);
                 }
                 archive.Dispose();
-            }).ConfigureAwait(false);
+            });
         }
 
-        private async Task APKDump(string file, string outputPath)
+        private Task APKDump(string file, string outputPath)
         {
-            await Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(() =>
             {
                 using var archive = ZipFile.OpenRead(file);
                 var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
@@ -831,7 +831,7 @@ namespace Il2CppDumper
 
                     foreach (var entry in archive.Entries)
                     {
-                        if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so") && Settings.Default.Arch is 0 or 1)
+                        if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so") && cbArch.SelectedIndex is 0 or 1)
                         {
                             WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
@@ -841,7 +841,7 @@ namespace Il2CppDumper
                             Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
                         }
 
-                        if (entry.FullName.Equals("lib/arm64-v8a/libil2cpp.so") && Settings.Default.Arch is 0 or 2)
+                        if (entry.FullName.Equals("lib/arm64-v8a/libil2cpp.so") && cbArch.SelectedIndex is 0 or 2)
                         {
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
@@ -851,7 +851,7 @@ namespace Il2CppDumper
                             Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
                         }
 
-                        if (entry.FullName.Equals("lib/x86/libil2cpp.so") && Settings.Default.Arch is 0)
+                        if (entry.FullName.Equals("lib/x86/libil2cpp.so") && cbArch.SelectedIndex is 0)
                         {
                             WriteOutput("Dumping x86...", Color.Chartreuse);
 
@@ -867,12 +867,12 @@ namespace Il2CppDumper
                     WriteOutput("This APK does not contain an IL2CPP application", Color.Yellow);
                 }
                 archive.Dispose();
-            }).ConfigureAwait(false);
+            });
         }
 
-        private async Task APKSplitDump(string file, string outputPath)
+        private Task APKSplitDump(string file, string outputPath)
         {
-            await Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(() =>
             {
                 using var archive = ZipFile.OpenRead(file);
                 var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
@@ -889,12 +889,12 @@ namespace Il2CppDumper
                     Dumper(tempPath + "libil2cpp.so", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
                 }
                 archive.Dispose();
-            }).ConfigureAwait(false);
+            });
         }
 
-        private async Task APKsDump(string file, string outputPath)
+        private Task APKsDump(string file, string outputPath)
         {
-            await Task.Factory.StartNew(() =>
+            return Task.Factory.StartNew(() =>
             {
                 using var archive = ZipFile.OpenRead(file);
                 foreach (var entryApks in archive.Entries)
@@ -917,7 +917,7 @@ namespace Il2CppDumper
 
                             foreach (var entry in entryBase.Entries)
                             {
-                                if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so") && Settings.Default.Arch is 0 or 1)
+                                if (entry.FullName.Equals("lib/armeabi-v7a/libil2cpp.so") && cbArch.SelectedIndex is 0 or 1)
                                 {
                                     WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
@@ -927,7 +927,7 @@ namespace Il2CppDumper
                                     Dumper(tempPath + "libil2cpparmv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARMv7\\"));
                                 }
 
-                                if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so") && Settings.Default.Arch is 0 or 2)
+                                if (entry.FullName.Equals(@"lib/arm64-v8a/libil2cpp.so") && cbArch.SelectedIndex is 0 or 2)
                                 {
                                     WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
@@ -937,7 +937,7 @@ namespace Il2CppDumper
                                     Dumper(tempPath + "libil2cpparm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\ARM64\\"));
                                 }
 
-                                if (entry.FullName.Equals(@"lib/x86/libil2cpp.so") && Settings.Default.Arch is 0)
+                                if (entry.FullName.Equals(@"lib/x86/libil2cpp.so") && cbArch.SelectedIndex is 0)
                                 {
                                     WriteOutput("Dumping x86...", Color.Chartreuse);
 
@@ -953,7 +953,7 @@ namespace Il2CppDumper
                     }
                 }
                 archive.Dispose();
-            }).ConfigureAwait(false);
+            });
         }
 
         #endregion Auto Dump
