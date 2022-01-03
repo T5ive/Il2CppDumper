@@ -245,7 +245,7 @@ namespace Il2CppDumper
 
         private void CopyScripts()
         {
-            var guiPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts");
+            var guiPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Scripts\\");
 
             foreach (SettingsProperty currentProperty in Settings.Default.Properties)
             {
