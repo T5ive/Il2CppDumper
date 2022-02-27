@@ -765,7 +765,7 @@ namespace Il2CppDumper
 
                     var ipaBinaryName = match.ToString();
                     var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Data/Managed/Metadata/global-metadata.dat");
-                    var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/{ipaBinaryName}");
+                    var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Frameworks/UnityFramework.framework/UnityFramework");
                     if (metadataFile != null && binaryFile != null)
                     {
                         if (Settings.Default.extDat)
