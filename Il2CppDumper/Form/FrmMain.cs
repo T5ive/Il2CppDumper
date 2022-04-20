@@ -756,7 +756,7 @@ namespace Il2CppDumper
             return Task.Factory.StartNew(() =>
             {
                 using var archive = ZipFile.OpenRead(file);
-                var ipaBinaryFolder = archive.Entries.FirstOrDefault(f => f.FullName.StartsWith("Payload/") && f.FullName.EndsWith(".app/") && f.FullName.Count(x => x == '/') == 2);
+                var ipaBinaryFolder = archive.Entries.FirstOrDefault(f => f.FullName.StartsWith("Payload/") && f.FullName.Contains(".app/") && f.FullName.Count(x => x == '/') == 2);
 
                 if (ipaBinaryFolder != null)
                 {
@@ -766,6 +766,10 @@ namespace Il2CppDumper
                     var ipaBinaryName = match.ToString();
                     var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Data/Managed/Metadata/global-metadata.dat");
                     var binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/Frameworks/UnityFramework.framework/UnityFramework");
+                    if (binaryFile == null)
+                    {
+                        binaryFile = archive.Entries.FirstOrDefault(f => f.FullName == $"Payload/{ipaBinaryName}.app/{ipaBinaryName}");
+                    }
                     if (metadataFile != null && binaryFile != null)
                     {
                         if (Settings.Default.extDat)
