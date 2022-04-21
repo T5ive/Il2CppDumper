@@ -359,12 +359,25 @@ namespace Il2CppDumper
             var version = _config.ForceIl2CppVersion ? _config.ForceVersion : metadata.Version;
             il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
             WriteOutput($"Il2Cpp Version: {il2Cpp.Version}");
-            if (il2Cpp.Version >= 27 && il2Cpp is ElfBase elf && elf.IsDumped)
+            if (il2Cpp.CheckDump())
             {
-                var metadataValue = "";
-                if (InputBox.Show("Input global-metadata.dat dump address:", "", ref metadataValue) != DialogResult.OK) return false;
-                metadata.Address = Convert.ToUInt64(metadataValue, 16);
-                WriteOutput($"global-metadata.dat dump address: {metadataValue}");
+                if (il2Cpp is ElfBase elf)
+                {
+                    var value = "";
+                    if (InputBox.Show("Input il2cpp dump address or input 0 to force continue:", "Detected this may be a dump file", ref value) != DialogResult.OK) return false;
+                    var dumpAddr = Convert.ToUInt64(value, 16);
+                    if (dumpAddr != 0)
+                    {
+                        WriteOutput($"il2cpp dump address: {dumpAddr}");
+                        il2Cpp.ImageBase = dumpAddr;
+                        il2Cpp.IsDumped = true;
+                        elf.Reload();
+                    }
+                }
+                else
+                {
+                    il2Cpp.IsDumped = true;
+                }
             }
 
             WriteOutput("Searching...");
@@ -402,7 +415,12 @@ namespace Il2CppDumper
                     WriteOutput($"MetadataRegistration: {metadataValue}");
 
                     il2Cpp.Init(codeRegistration, metadataRegistration);
-                    return true;
+                }
+                if (il2Cpp.Version >= 27 && il2Cpp.IsDumped)
+                {
+                    var typeDef = metadata.typeDefs[0];
+                    var il2CppType = il2Cpp.types[typeDef.byvalTypeIndex];
+                    metadata.ImageBase = il2CppType.data.typeHandle - metadata.header.typeDefinitionsOffset;
                 }
             }
             catch (Exception e)

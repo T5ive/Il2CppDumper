@@ -626,7 +626,7 @@ namespace Il2CppDumper
                 }
                 catch
                 {
-                    Console.WriteLine($"ERROR: Error while restoring attributeIndex {attributeIndex}");
+                    Program.frmMain.WriteOutput($"ERROR: Error while restoring attributeIndex {attributeIndex}");
                 }
             }
         }
