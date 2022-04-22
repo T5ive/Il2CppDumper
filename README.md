@@ -10,7 +10,7 @@ Unity il2cpp reverse engineer
 
 * Complete DLL restore (except code), can be used to extract `MonoBehaviour` and `MonoScript`
 * Supports ELF, ELF64, Mach-O, PE, NSO and WASM format
-* Supports Unity 5.3 - 2021.2
+* Supports Unity 5.3 - 2021.3
 * Supports generate IDA and Ghidra scripts to help IDA and Ghidra better analyze il2cpp files
 * Supports generate structures header file
 * Supports Android memory dumped `libil2cpp.so` file to bypass protection
@@ -81,8 +81,20 @@ Available options:
 * `GenerateDummyDll`, `GenerateScript`
   * Whether to generate these things
 
+* `DummyDllAddToken`
+  * Whether to add token in DummyDll
+
+* `RequireAnyKey`
+  * Whether to press any key to exit at the end
+
 * `ForceIl2CppVersion`, `ForceVersion`
   * If `ForceIl2CppVersion` is `true`, the program will use the version number specified in `ForceVersion` to choose parser for il2cpp binaries (does not affect the choice of metadata parser). This may be useful on some older il2cpp version (e.g. the program may need to use v16 parser on il2cpp v20 (Android) binaries in order to work properly)
+
+* `ForceDump`
+  * Force files to be treated as dumped
+
+* `NoRedirectedPointer`
+  * Treat pointers in dumped files as unredirected, This option needs to be `true` for files dumped from some devices
 
 ## Common errors
 
@@ -90,7 +102,7 @@ Available options:
 
 Make sure you choose the correct file. Sometimes games may obfuscate this file for content protection purposes and so on. Deobfuscating of such files is beyond the scope of this program, so please **DO NOT** file an issue regarding to deobfuscating.
 
-If your file is `libil2cpp.so` and you have a rooted Android phone, you can try my other project [Riru-Il2CppDumper](https://github.com/Perfare/Riru-Il2CppDumper), it can bypass this protection.
+If your file is `libil2cpp.so` and you have a rooted Android phone, you can try my other project [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper), it can bypass this protection.
 
 #### `ERROR: Can't use auto mode to process file, try manual mode.`
 
@@ -102,7 +114,7 @@ You can open a new issue and upload the file, I will try to solve.
 
 Il2CppDumper detected that the executable file has been protected, use `GameGuardian` to dump `libil2cpp.so` from the game memory, then use Il2CppDumper to load and follow the prompts, can bypass most protections.
 
-If you have a rooted Android phone, you can try my other project [Riru-Il2CppDumper](https://github.com/Perfare/Riru-Il2CppDumper), it can bypass almost all protections.
+If you have a rooted Android phone, you can try my other project [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper), it can bypass almost all protections.
 
 ## Credits
 
