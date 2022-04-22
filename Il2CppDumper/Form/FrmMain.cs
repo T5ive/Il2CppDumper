@@ -357,9 +357,9 @@ namespace Il2CppDumper
                     break;
             }
             var version = _config.ForceIl2CppVersion ? _config.ForceVersion : metadata.Version;
-            il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
+            il2Cpp.SetProperties(version, metadata.metadataUsagesCount);
             WriteOutput($"Il2Cpp Version: {il2Cpp.Version}");
-            if (il2Cpp.CheckDump())
+            if (config.ForceDump || il2Cpp.CheckDump())
             {
                 if (il2Cpp is ElfBase elf)
                 {
@@ -371,7 +371,10 @@ namespace Il2CppDumper
                         WriteOutput($"il2cpp dump address: {dumpAddr}");
                         il2Cpp.ImageBase = dumpAddr;
                         il2Cpp.IsDumped = true;
-                        elf.Reload();
+                        if (!config.NoRedirectedPointer)
+                        {
+                            elf.Reload();
+                        }
                     }
                 }
                 else
@@ -388,7 +391,7 @@ namespace Il2CppDumper
                 {
                     WriteOutput("Use custom PE loader");
                     il2Cpp = PELoader.Load(il2CppPath);
-                    il2Cpp.SetProperties(version, metadata.maxMetadataUsages);
+                    il2Cpp.SetProperties(version, metadata.metadataUsagesCount);
                     flag = il2Cpp.PlusSearch(metadata.methodDefs.Count(x => x.methodIndex >= 0), metadata.typeDefs.Length, metadata.imageDefs.Length);
                 }
                 if (!flag)
