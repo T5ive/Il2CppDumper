@@ -359,7 +359,7 @@ namespace Il2CppDumper
             var version = _config.ForceIl2CppVersion ? _config.ForceVersion : metadata.Version;
             il2Cpp.SetProperties(version, metadata.metadataUsagesCount);
             WriteOutput($"Il2Cpp Version: {il2Cpp.Version}");
-            if (config.ForceDump || il2Cpp.CheckDump())
+            if (_config.ForceDump || il2Cpp.CheckDump())
             {
                 if (il2Cpp is ElfBase elf)
                 {
@@ -371,7 +371,7 @@ namespace Il2CppDumper
                         WriteOutput($"il2cpp dump address: {dumpAddr}");
                         il2Cpp.ImageBase = dumpAddr;
                         il2Cpp.IsDumped = true;
-                        if (!config.NoRedirectedPointer)
+                        if (!_config.NoRedirectedPointer)
                         {
                             elf.Reload();
                         }
