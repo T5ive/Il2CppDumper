@@ -283,7 +283,7 @@ namespace Il2CppDumper
             else
             {
                 _config = new Config();
-                WriteOutput("config.json file does not exist. Using defaults", Color.Yellow);
+                WriteOutput("config.json file does not exist. Using defaults", Color.YellowGreen);
             }
 
             WriteOutput("Initializing metadata...");
@@ -298,7 +298,7 @@ namespace Il2CppDumper
             switch (il2CppMagic)
             {
                 default:
-                    WriteOutput("ERROR: il2cpp file not supported.");
+                    WriteOutput("ERROR: il2cpp file not supported.", System.Drawing.Color.Red);
                     throw new NotSupportedException("ERROR: il2cpp file not supported.");
                 case 0x6D736100:
                     var web = new WebAssembly(il2CppMemory);
@@ -404,7 +404,7 @@ namespace Il2CppDumper
                 }
                 if (!flag)
                 {
-                    WriteOutput("ERROR: Can't use auto mode to process file, try manual mode.");
+                    WriteOutput("ERROR: Can't use auto mode to process file, try manual mode.", System.Drawing.Color.Red);
                     WriteOutput("Input CodeRegistration: ");
 
                     var codeValue = "";
@@ -428,8 +428,8 @@ namespace Il2CppDumper
             }
             catch (Exception e)
             {
-                WriteOutput(e.Message);
-                WriteOutput("ERROR: An error occurred while processing.");
+                WriteOutput(e.Message, System.Drawing.Color.Red);
+                WriteOutput("ERROR: An error occurred while processing.", System.Drawing.Color.Red);
                 return false;
             }
             return true;
@@ -731,6 +731,7 @@ namespace Il2CppDumper
                     case "TextBox":
                     case "RadioButton":
                     case "RichTextBox":
+                    case "ComboBox":
                         control.Enabled = value;
                         break;
 
@@ -755,6 +756,7 @@ namespace Il2CppDumper
                     case "TextBox":
                     case "RadioButton":
                     case "RichTextBox":
+                    case "ComboBox":
                         control2.Enabled = value;
                         break;
 
@@ -817,12 +819,12 @@ namespace Il2CppDumper
                     }
                     else
                     {
-                        WriteOutput("This IPA does not contain an IL2CPP application", Color.Yellow);
+                        WriteOutput("This IPA does not contain an IL2CPP application", Color.YellowGreen);
                     }
                 }
                 else
                 {
-                    WriteOutput("Failed to extract required file. Please extract the files manually", Color.Yellow);
+                    WriteOutput("Failed to extract required file. Please extract the files manually", Color.YellowGreen);
                 }
                 archive.Dispose();
             });
@@ -833,18 +835,17 @@ namespace Il2CppDumper
             return Task.Factory.StartNew(() =>
             {
                 using var archive = ZipFile.OpenRead(file);
-                var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));
-                var metadataPath = archive.Entries.FirstOrDefault(f => f.FullName.Contains("assets/bin/Data/Managed/etc/"));
+                var binaryFile = archive.Entries.FirstOrDefault(f => f.Name.Contains("libil2cpp.so"));               
                 var metadataFile = archive.Entries.FirstOrDefault(f => f.FullName == "assets/bin/Data/Managed/Metadata/global-metadata.dat");
 
-                if (binaryFile == null && metadataPath != null)
+                if (binaryFile == null && metadataFile != null)
                 {
-                    WriteOutput("This APK does not contain lib folder. APK has been splitted", Color.Yellow);
+                    WriteOutput("This APK does not contain lib folder. APK has been splitted", Color.YellowGreen);
                     return;
                 }
-                if (binaryFile != null && metadataPath == null)
+                if (binaryFile != null && metadataFile == null)
                 {
-                    WriteOutput("This APK contains il2cpp but does not contain global-metadata.dat. It may be protected or APK has been splitted", Color.Yellow);
+                    WriteOutput("This APK contains il2cpp but does not contain global-metadata.dat. It may be protected or APK has been splitted", Color.YellowGreen);
                     return;
                 }
 
@@ -889,7 +890,7 @@ namespace Il2CppDumper
                 }
                 else
                 {
-                    WriteOutput("This APK does not contain an IL2CPP application", Color.Yellow);
+                    WriteOutput("This APK does not contain an IL2CPP application", Color.YellowGreen);
                 }
                 archive.Dispose();
             });

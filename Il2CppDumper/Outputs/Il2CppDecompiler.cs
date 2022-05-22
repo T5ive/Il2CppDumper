@@ -388,7 +388,7 @@ namespace Il2CppDumper
                 }
                 catch (Exception e)
                 {
-                    Program.frmMain.WriteOutput("ERROR: Some errors in dumping");
+                    Program.frmMain.WriteOutput("ERROR: Some errors in dumping", System.Drawing.Color.Red);
                     writer.Write("/*");
                     writer.Write(e);
                     writer.Write("*/\n}\n");

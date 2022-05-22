@@ -58,7 +58,7 @@ namespace Il2CppDumper
                         var cryptID = ReadUInt32();
                         if (cryptID != 0)
                         {
-                            Program.frmMain.WriteOutput("ERROR: This Mach-O executable is encrypted and cannot be processed.");
+                            Program.frmMain.WriteOutput("ERROR: This Mach-O executable is encrypted and cannot be processed.", System.Drawing.Color.Red);
                         }
                         break;
                 }

@@ -40,7 +40,7 @@ namespace Il2CppDumper
                 RelocationProcessing();
                 if (CheckProtection())
                 {
-                    Program.frmMain.WriteOutput("ERROR: This file may be protected.");
+                    Program.frmMain.WriteOutput("ERROR: This file may be protected.", System.Drawing.Color.Red);
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace Il2CppDumper
                 Init(codeRegistration, metadataRegistration);
                 return true;
             }
-            Program.frmMain.WriteOutput("ERROR: No symbol is detected");
+            Program.frmMain.WriteOutput("ERROR: No symbol is detected", System.Drawing.Color.Red);
             return false;
         }
 
@@ -234,7 +234,7 @@ namespace Il2CppDumper
                     switch (name)
                     {
                         case "JNI_OnLoad":
-                            Program.frmMain.WriteOutput("WARNING: find JNI_OnLoad");
+                            Program.frmMain.WriteOutput("WARNING: find JNI_OnLoad", System.Drawing.Color.YellowGreen);
                             return true;
                     }
                 }

@@ -45,15 +45,18 @@ namespace Il2CppDumper
             var sanity = ReadUInt32();
             if (sanity != 0xFAB11BAF)
             {
+                Program.frmMain.WriteOutput("ERROR: Metadata file supplied is not valid metadata file.", System.Drawing.Color.Red);
                 throw new InvalidDataException("ERROR: Metadata file supplied is not valid metadata file.");
             }
             var version = ReadInt32();
             if (version < 0 || version > 1000)
             {
+                Program.frmMain.WriteOutput("ERROR: Metadata file supplied is not valid metadata file.", System.Drawing.Color.Red);
                 throw new InvalidDataException("ERROR: Metadata file supplied is not valid metadata file.");
             }
             if (version < 16 || version > 29)
             {
+                Program.frmMain.WriteOutput($"Metadata file supplied is not a supported version[{version}].", System.Drawing.Color.Red);
                 throw new NotSupportedException($"ERROR: Metadata file supplied is not a supported version[{version}].");
             }
             Version = version;

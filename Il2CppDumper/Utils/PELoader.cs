@@ -19,11 +19,13 @@ namespace Il2CppDumper
                 var dosHeader = reader.ReadClass<DosHeader>();
                 if (dosHeader.Magic != 0x5A4D)
                 {
+                    Program.frmMain.WriteOutput("ERROR: Invalid PE file", System.Drawing.Color.Red);
                     throw new InvalidDataException("ERROR: Invalid PE file");
                 }
                 reader.Position = dosHeader.Lfanew;
                 if (reader.ReadUInt32() != 0x4550u) //Signature
                 {
+                    Program.frmMain.WriteOutput("ERROR: Invalid PE file", System.Drawing.Color.Red);
                     throw new InvalidDataException("ERROR: Invalid PE file");
                 }
                 var fileHeader = reader.ReadClass<FileHeader>();
