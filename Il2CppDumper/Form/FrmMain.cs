@@ -803,7 +803,7 @@ namespace Il2CppDumper
                             WriteOutput("Dumping ARM64...", Color.Chartreuse);
 
                             if (Settings.Default.extBin)
-                                binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
+                                binaryFile.ExtractToFile(FileDir(outputPath + $"/{binaryFile.Name}"), true);
                             binaryFile.ExtractToFile(tempPath + "arm64", true);
                             Dumper(tempPath + "arm64", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
                         }
@@ -812,7 +812,7 @@ namespace Il2CppDumper
                             WriteOutput("Dumping ARMv7...", Color.Chartreuse);
 
                             if (Settings.Default.extBin)
-                                binaryFile.ExtractToFile(FileDir(outputPath + $"/{ipaBinaryName}"), true);
+                                binaryFile.ExtractToFile(FileDir(outputPath + $"/{binaryFile.Name}"), true);
                             binaryFile.ExtractToFile(tempPath + "armv7", true);
                             Dumper(tempPath + "armv7", tempPath + "global-metadata.dat", FileDir(outputPath + "\\"));
                         }
