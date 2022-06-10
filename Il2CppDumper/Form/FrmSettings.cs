@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Il2CppDumper
+namespace Il2CppDumperGui
 {
     public partial class FrmSettings : Form
     {

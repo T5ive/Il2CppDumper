@@ -1,4 +1,4 @@
-﻿namespace Il2CppDumper
+﻿namespace Il2CppDumperGui
 {
     partial class FrmSettings
     {

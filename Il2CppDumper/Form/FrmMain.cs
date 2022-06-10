@@ -1,4 +1,4 @@
-﻿using Il2CppDumper.Properties;
+﻿using Il2CppDumperGui.Properties;
 using Il2CppDumperGui;
 using Newtonsoft.Json;
 using System;
