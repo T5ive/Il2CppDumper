@@ -51,7 +51,7 @@ Unity il2cpp逆向工程
 
 用于Ghidra
 
-#### binaryninja3_py3.py
+#### Il2CppBinaryNinja
 
 用于BinaryNinja
 
