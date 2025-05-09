@@ -631,7 +631,7 @@ namespace Il2CppDumper
                 }
                 catch
                 {
-                    Console.WriteLine($"ERROR: Error while restoring attributeIndex {attributeIndex}");
+                    Logger.Log($"ERROR: Error while restoring attributeIndex {attributeIndex}");
                 }
             }
         }
