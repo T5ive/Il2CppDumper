@@ -1,0 +1,60 @@
+name: build
+
+on:
+  push:
+    branches: [ "GUI" ]
+  pull_request:
+    branches: [ "GUI" ]
+    
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [Net9]
+        include:
+          - platform: Net9
+            package-name: Net9
+            build-dir: net9.0-windows
+            proj-name: Il2CppDumper.Winforms
+            proj-file: Il2CppDumper.WinForms\Il2CppDumper.WinForms.csproj
+            solution-name: Il2CppDumper.sln
+            config: Release
+            dotnet: 9.0.x
+
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET ${{matrix.dotnet}}
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{matrix.dotnet}}
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.1.3   
+    
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.1.1
+    
+    - name: Restore NuGet packages
+      run: nuget restore ${{matrix.solution-name}}
+      
+    - name: Build app for release
+      run: msbuild ${{matrix.proj-file}} -t:rebuild -p:Configuration=${{matrix.config}}
+      
+    - name: Create output directory
+      run: New-Item -ItemType Directory -Path C:\builtfiles\${{matrix.proj-name}}-${{matrix.package-name}} -Force > $null
+      continue-on-error: true
+        
+    - name:  Copy release files for upload
+      run: Copy-Item -Path ${{matrix.proj-name}}\bin\Release\${{matrix.build-dir}}\* -Destination C:\builtfiles\${{matrix.proj-name}}-${{matrix.package-name}} -Recurse
+
+    - uses: actions/upload-artifact@v3.1.2        
+      with:
+        name: ${{matrix.proj-name}} - ${{matrix.build-dir}}
+        path: C:\builtfiles\${{matrix.proj-name}}-${{matrix.package-name}}
+        if-no-files-found: error
